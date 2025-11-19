@@ -1,10 +1,10 @@
 info.app:
-  name: HMPPS Template Kotlin
+  name: HMPPS Breach Report Co Sso Api
   version: 1.0
 
 spring:
   application:
-    name: hmpps-template-kotlin
+    name: hmpps-breach-report-co-sso-api
 
   jackson:
     date-format: "yyyy-MM-dd HH:mm:ss"
