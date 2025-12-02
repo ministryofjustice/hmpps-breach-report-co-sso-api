@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.model
 
 import jakarta.validation.constraints.Pattern
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -9,7 +10,7 @@ data class Cosso(
   @field:Pattern(regexp = "^[A-Z][0-9]{6}")
   var crn: String,
   var titleAndFullName: String? = null,
-  var dateOfForm: LocalDateTime? = null,
+  var dateOfForm: LocalDate? = null,
   var sheetSentBy: String? = null,
   var telephoneNumber: String? = null,
   var mobileNumber: String? = null,

@@ -11,9 +11,9 @@ CREATE TABLE public.address
     county                 varchar(35),
     postcode               varchar(8),
     created_by_user        varchar(100) NOT NULL,
-    created_datetime       timestamp    NOT NULL,
+    created_datetime       timestamp without time zone NOT NULL,
     last_updated_user      varchar(100) NOT NULL,
-    last_updated_datetime  timestamp    NOT NULL,
+    last_updated_datetime  timestamp without time zone NOT NULL,
     office_description     varchar(50)
 );
 
@@ -22,12 +22,12 @@ CREATE TABLE public.cosso
     id                          uuid PRIMARY KEY,
     crn                         char(7) NOT NULL,
     title_and_full_name         varchar(200),
-    date_of_form                timestamp,
+    date_of_form                date NULL,
     sheet_sent_by               varchar(100),
     telephone_number            varchar(35),
     mobile_number               varchar(35),
     email_address               varchar(200),
-    completed_date              timestamp with time zone,
+    completed_date              timestamp without time zone NULL,
     postal_address_id           uuid REFERENCES public.address(id),
     date_of_birth               timestamp,
     prison_number               varchar(50),
@@ -59,12 +59,12 @@ CREATE TABLE public.cosso
     risk_of_harm_changed        boolean null,
     sign_and_send_saved         boolean null,
     contact_saved               boolean null,
-    review_required_date        timestamp NULL,
+    review_required_date        timestamp without time zone NULL,
     review_event                varchar(100) NULL,
     created_by_user             varchar(100) NOT NULL,
-    created_datetime            timestamp    NOT NULL,
+    created_datetime            timestamp without time zone NULL,
     last_updated_user           varchar(100) NOT NULL,
-    last_updated_datetime       timestamp    NOT NULL
+    last_updated_datetime       timestamp without time zone NULL
 );
 
 CREATE TABLE public.contact
@@ -76,9 +76,9 @@ CREATE TABLE public.contact
     contact_location_id       uuid NULL,
     form_sent                 boolean,
     created_by_user           varchar(100) NOT NULL,
-    created_datetime          timestamp    NOT NULL,
+    created_datetime          timestamp without time zone NULL,
     last_updated_user         varchar(100) NOT NULL,
-    last_updated_datetime     timestamp    NOT NULL
+    last_updated_datetime     timestamp without time zone NULL
 );
 
 CREATE TABLE public.screen_information

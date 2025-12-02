@@ -3,15 +3,23 @@ package uk.gov.justice.digital.hmpps.breachreportcossoapi.integration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Cosso
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.InitialiseCosso
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
+import java.util.UUID
 
 class CossoCrudTests : IntegrationTestBase() {
 
   @Autowired
   private lateinit var cossoRepository: CossoRepository
+
+  @Autowired
+  private lateinit var addressRepository: AddressRepository
 
   @Test
   fun `should create a Cosso record`() {
@@ -66,16 +74,16 @@ class CossoCrudTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/cosso")
       .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(Cosso(crn = "X600002"))
+      .bodyValue(Cosso(crn = "X000003"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val cosso = cossoRepository.findByCrn("X600002").single()
-    assertThat(cosso.crn).isEqualTo("X600002")
+    val cosso = cossoRepository.findByCrn("X000003").single()
+    assertThat(cosso.crn).isEqualTo("X000003")
 
     val cossoBody = Cosso(
-      crn = "X600002",
+      crn = "X000003",
       completedDate = ZonedDateTime.now(),
       reviewEvent = "Merge",
       reviewRequiredDate = LocalDateTime.now(),
@@ -89,8 +97,8 @@ class CossoCrudTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
 
-    val updatedCosso = cossoRepository.findByCrn("X600002").single()
-    assertThat(updatedCosso.crn).isEqualTo("X600002")
+    val updatedCosso = cossoRepository.findByCrn("X000003").single()
+    assertThat(updatedCosso.crn).isEqualTo("X000003")
     assertThat(updatedCosso.reviewEvent).isEqualTo("Merge")
     assertThat(updatedCosso.completedDate).isNotNull()
   }
@@ -128,5 +136,166 @@ class CossoCrudTests : IntegrationTestBase() {
       .isOk
 
     assertThat(cossoRepository.findById(cosso.first().id)).isEmpty
+  }
+
+  @Test
+  fun `test updating cosso record all fields and address records`() {
+    val postalAddress = addressRepository.save(
+      AddressEntity(
+        id = UUID.randomUUID(),
+        addressId = 1234,
+        status = "Postal",
+        buildingName = "Post",
+        addressNumber = "1",
+        streetName = "Street",
+        district = "District",
+        townCity = "London",
+        county = "Greater London",
+        postcode = "AA11AA",
+        createdByUser = "test-user",
+        createdDatetime = LocalDateTime.now(),
+        lastUpdatedUser = "test-user",
+        lastUpdatedDatetime = LocalDateTime.now(),
+        officeDescription = "Office",
+      ),
+    )
+
+    val workAddress = addressRepository.save(
+      AddressEntity(
+        id = UUID.randomUUID(),
+        addressId = 5678,
+        status = "Main",
+        buildingName = "Work",
+        addressNumber = "2",
+        streetName = "Work Street",
+        district = "District",
+        townCity = "London",
+        county = "Greater London",
+        postcode = "AA11AA",
+        createdByUser = "test-user",
+        createdDatetime = LocalDateTime.now(),
+        lastUpdatedUser = "test-user",
+        lastUpdatedDatetime = LocalDateTime.now(),
+        officeDescription = "Office",
+      ),
+    )
+
+    val nowDate = LocalDate.now()
+    val nowDateTime = LocalDateTime.now().withNano(0)
+    val nowZoned = ZonedDateTime.now().withNano(0)
+    val dob = nowDateTime.minusYears(30)
+
+    webTestClient.post()
+      .uri("/cosso")
+      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(
+        InitialiseCosso(
+          crn = "X777777",
+        ),
+      )
+      .exchange()
+      .expectStatus().isCreated
+
+    val created = cossoRepository.findByCrn("X777777").single()
+    val originalLastUpdated = created.lastUpdatedDatetime
+
+    val updatePayload = Cosso(
+      crn = "X777777",
+      titleAndFullName = "John Example",
+      dateOfForm = nowDate,
+      sheetSentBy = "Officer",
+      telephoneNumber = "00000000001",
+      mobileNumber = "07700000000",
+      emailAddress = "test@example.com",
+      completedDate = nowZoned,
+      postalAddressId = postalAddress.id,
+      dateOfBirth = dob,
+      prisonNumber = "12345678",
+      workAddressId = workAddress.id,
+      probationArea = "London",
+      witnessAvailability = "Always",
+      mainOffence = "Robbery",
+      additionalOffence = "Theft",
+      sentencingCourt = "Example Crown Court",
+      sentenceType = "Custodial",
+      sentenceLength = "5",
+      lengthUnits = "Years",
+      suspendedCustodyLength = "None",
+      secondLength = "2",
+      secondLengthUnits = "Months",
+      requirementType = "Community Order",
+      requirementLength = "150",
+      requirementSecondLength = "Hours",
+      amendmentDetails = "Updated for test",
+      amendmentReason = "Testing update",
+      whyInBreach = "No attendance",
+      stepsToPreventBreach = "Weekly reporting",
+      complianceODate = "01/01/2025",
+      riskHistory = "Risk history text",
+      recommendations = "Recommendations text",
+      supportingComments = "Supporting comments text",
+      basicDetailsSaved = true,
+      confirmEqualities = true,
+      riskOfHarmChanged = false,
+      signAndSendSaved = true,
+      contactSaved = true,
+      reviewRequiredDate = nowDateTime,
+      reviewEvent = "EVENT_MOVE",
+    )
+
+    webTestClient.put()
+      .uri("/cosso/${created.id}")
+      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(updatePayload)
+      .exchange()
+      .expectStatus().isOk
+
+    val updated = cossoRepository.findByCrn("X777777").single()
+
+    assertThat(updated.crn).isEqualTo("X777777")
+    assertThat(updated.titleAndFullName).isEqualTo("John Example")
+    assertThat(updated.dateOfForm).isEqualTo(nowDate)
+    assertThat(updated.sheetSentBy).isEqualTo("Officer")
+    assertThat(updated.telephoneNumber).isEqualTo("00000000001")
+    assertThat(updated.mobileNumber).isEqualTo("07700000000")
+    assertThat(updated.emailAddress).isEqualTo("test@example.com")
+    assertThat(updated.completedDate?.withNano(0)).isEqualTo(nowZoned)
+    assertThat(updated.postalAddress?.id).isEqualTo(postalAddress.id)
+    assertThat(updated.workAddress?.id).isEqualTo(workAddress.id)
+    assertThat(updated.dateOfBirth).isEqualTo(dob)
+    assertThat(updated.prisonNumber).isEqualTo("12345678")
+    assertThat(updated.probationArea).isEqualTo("London")
+    assertThat(updated.witnessAvailability).isEqualTo("Always")
+    assertThat(updated.mainOffence).isEqualTo("Robbery")
+    assertThat(updated.additionalOffence).isEqualTo("Theft")
+    assertThat(updated.sentencingCourt).isEqualTo("Example Crown Court")
+    assertThat(updated.sentenceType).isEqualTo("Custodial")
+    assertThat(updated.sentenceLength).isEqualTo("5")
+    assertThat(updated.lengthUnits).isEqualTo("Years")
+    assertThat(updated.suspendedCustodyLength).isEqualTo("None")
+    assertThat(updated.secondLength).isEqualTo("2")
+    assertThat(updated.secondLengthUnits).isEqualTo("Months")
+    assertThat(updated.requirementType).isEqualTo("Community Order")
+    assertThat(updated.requirementLength).isEqualTo("150")
+    assertThat(updated.requirementSecondLength).isEqualTo("Hours")
+    assertThat(updated.amendmentDetails).isEqualTo("Updated for test")
+    assertThat(updated.amendmentReason).isEqualTo("Testing update")
+    assertThat(updated.whyInBreach).isEqualTo("No attendance")
+    assertThat(updated.stepsToPreventBreach).isEqualTo("Weekly reporting")
+    assertThat(updated.complianceODate).isEqualTo("01/01/2025")
+    assertThat(updated.riskHistory).isEqualTo("Risk history text")
+    assertThat(updated.recommendations).isEqualTo("Recommendations text")
+    assertThat(updated.supportingComments).isEqualTo("Supporting comments text")
+    assertThat(updated.basicDetailsSaved).isTrue()
+    assertThat(updated.confirmEqualities).isTrue()
+    assertThat(updated.riskOfHarmChanged).isFalse()
+    assertThat(updated.signAndSendSaved).isTrue()
+    assertThat(updated.contactSaved).isTrue()
+    assertThat(updated.reviewRequiredDate).isEqualTo(nowDateTime)
+    assertThat(updated.reviewEvent).isEqualTo("EVENT_MOVE")
+    assertThat(updated.createdDatetime).isEqualTo(created.createdDatetime)
+    assertThat(updated.createdByUser).isEqualTo(created.createdByUser)
+    assertThat(updated.lastUpdatedDatetime).isNotEqualTo(originalLastUpdated)
+    assertThat(updated.lastUpdatedUser).isNotBlank()
   }
 }

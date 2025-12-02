@@ -13,6 +13,7 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -25,7 +26,7 @@ data class CossoEntity(
   val id: UUID = UUID.randomUUID(),
   var crn: String,
   var titleAndFullName: String? = null,
-  var dateOfForm: LocalDateTime? = null,
+  var dateOfForm: LocalDate? = null,
   var sheetSentBy: String? = null,
   var telephoneNumber: String? = null,
   var mobileNumber: String? = null,
