@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.breachreportcossoapi.entity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
-import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
@@ -32,12 +31,12 @@ data class CossoEntity(
   var mobileNumber: String? = null,
   var emailAddress: String? = null,
   var completedDate: ZonedDateTime? = null,
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn(name = "postal_address_id")
   var postalAddress: AddressEntity? = null,
   var dateOfBirth: LocalDateTime? = null,
   var prisonNumber: String? = null,
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn(name = "work_address_id")
   var workAddress: AddressEntity? = null,
   var probationArea: String? = null,

@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.breachreportcossoapi.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
-import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
@@ -21,12 +20,12 @@ import java.util.UUID
 data class ContactEntity(
   @Id
   val id: UUID = UUID.randomUUID(),
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn(name = "cosso_id")
   var cosso: CossoEntity? = null,
   var contactTypeDescription: String? = null,
   var contactPerson: String? = null,
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @JoinColumn(name = "contact_location_id")
   var contactLocation: AddressEntity? = null,
   var formSent: Boolean? = null,
