@@ -1,17 +1,15 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.integration
 
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
-import uk.gov.justice.digital.hmpps.breachreportcossoapi.integration.wiremock.HmppsAuthApiExtension
-import uk.gov.justice.digital.hmpps.breachreportcossoapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
+import uk.gov.justice.hmpps.sqs.HmppsQueueService
+import uk.gov.justice.hmpps.sqs.MissingQueueException
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
-@ExtendWith(HmppsAuthApiExtension::class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles("test")
 abstract class IntegrationTestBase {
@@ -22,13 +20,21 @@ abstract class IntegrationTestBase {
   @Autowired
   protected lateinit var jwtAuthHelper: JwtAuthorisationHelper
 
+  @Autowired
+  protected lateinit var hmppsQueueService: HmppsQueueService
+
+  private val inboundTopic by lazy { hmppsQueueService.findByTopicId("hmppsbreachreportcossotopic") ?: throw MissingQueueException("HmppsTopic inboundtopic not found") }
+  protected val inboundSnsClient by lazy { inboundTopic.snsClient }
+
+  private val outboundTopic by lazy { hmppsQueueService.findByTopicId("hmppsbreachreportcossopublishtopic") ?: throw MissingQueueException("HmppsTopic hmppsbreachreportcossopublishtopic not found") }
+  protected val outboundSnsClient by lazy { outboundTopic.snsClient }
+
+  private val outboundQueue by lazy { hmppsQueueService.findByQueueId("hmppsbreachreportcossopublishqueue") ?: throw MissingQueueException("HmppsQueue outboundqueue not found") }
+  protected val outboundQueueClient by lazy { outboundQueue.sqsClient }
+
   internal fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(),
     scopes: List<String> = listOf("read"),
   ): (HttpHeaders) -> Unit = jwtAuthHelper.setAuthorisationHeader(username = username, scope = scopes, roles = roles)
-
-  protected fun stubPingWithResponse(status: Int) {
-    hmppsAuth.stubHealthPing(status)
-  }
 }
