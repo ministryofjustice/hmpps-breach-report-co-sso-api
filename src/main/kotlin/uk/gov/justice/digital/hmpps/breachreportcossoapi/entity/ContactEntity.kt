@@ -1,10 +1,12 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
@@ -25,8 +27,8 @@ data class ContactEntity(
   var cosso: CossoEntity? = null,
   var contactTypeDescription: String? = null,
   var contactPerson: String? = null,
-  @ManyToOne
-  @JoinColumn(name = "contact_location_id")
+  @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+  @JoinColumn(name = "contact_location_id", unique = true)
   var contactLocation: AddressEntity? = null,
   var formSent: Boolean? = null,
   @CreatedBy

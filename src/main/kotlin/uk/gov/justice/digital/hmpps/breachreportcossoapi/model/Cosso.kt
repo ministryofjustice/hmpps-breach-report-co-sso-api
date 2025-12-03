@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Pattern
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
-import java.util.UUID
 
 data class Cosso(
   @field:Pattern(regexp = "^[A-Z][0-9]{6}")
@@ -16,10 +15,10 @@ data class Cosso(
   var mobileNumber: String? = null,
   var emailAddress: String? = null,
   var completedDate: ZonedDateTime? = null,
-  var postalAddressId: UUID? = null,
+  var postalAddress: Address? = null,
   var dateOfBirth: LocalDateTime? = null,
   var prisonNumber: String? = null,
-  var workAddressId: UUID? = null,
+  var workAddress: Address? = null,
   var probationArea: String? = null,
   var witnessAvailability: String? = null,
   var mainOffence: String? = null,

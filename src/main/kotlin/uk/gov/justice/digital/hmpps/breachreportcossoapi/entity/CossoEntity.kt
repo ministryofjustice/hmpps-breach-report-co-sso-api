@@ -1,11 +1,12 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
@@ -31,13 +32,13 @@ data class CossoEntity(
   var mobileNumber: String? = null,
   var emailAddress: String? = null,
   var completedDate: ZonedDateTime? = null,
-  @ManyToOne
-  @JoinColumn(name = "postal_address_id")
+  @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+  @JoinColumn(name = "postal_address_id", unique = true)
   var postalAddress: AddressEntity? = null,
   var dateOfBirth: LocalDateTime? = null,
   var prisonNumber: String? = null,
-  @ManyToOne
-  @JoinColumn(name = "work_address_id")
+  @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+  @JoinColumn(name = "work_address_id", unique = true)
   var workAddress: AddressEntity? = null,
   var probationArea: String? = null,
   var witnessAvailability: String? = null,

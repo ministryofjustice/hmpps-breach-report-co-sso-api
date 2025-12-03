@@ -3,33 +3,23 @@ package uk.gov.justice.digital.hmpps.breachreportcossoapi.integration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AddressEntity
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Address
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Cosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.InitialiseCosso
-import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
-import java.util.UUID
 
 class CossoCrudTests : IntegrationTestBase() {
 
   @Autowired
   private lateinit var cossoRepository: CossoRepository
 
-  @Autowired
-  private lateinit var addressRepository: AddressRepository
-
   @Test
   fun `should create a Cosso record`() {
-    webTestClient.post()
-      .uri("/cosso")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(Cosso(crn = "X000001"))
-      .exchange()
-      .expectStatus()
-      .isCreated
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(Cosso(crn = "X000001")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X000001").single()
     assertThat(cosso.crn).isEqualTo("X000001")
@@ -38,13 +28,8 @@ class CossoCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should update a Cosso record`() {
-    webTestClient.post()
-      .uri("/cosso")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(Cosso(crn = "X000002"))
-      .exchange()
-      .expectStatus()
-      .isCreated
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(Cosso(crn = "X000002")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X000002").single()
     assertThat(cosso.crn).isEqualTo("X000002")
@@ -56,13 +41,8 @@ class CossoCrudTests : IntegrationTestBase() {
       reviewRequiredDate = LocalDateTime.now(),
     )
 
-    webTestClient.put()
-      .uri("/cosso/" + cosso.id)
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(cossoBody)
-      .exchange()
-      .expectStatus()
-      .isOk
+    webTestClient.put().uri("/cosso/" + cosso.id).headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(cossoBody).exchange().expectStatus().isOk
 
     val updatedCosso = cossoRepository.findByCrn("X000002").single()
     assertThat(updatedCosso.crn).isEqualTo("X000002")
@@ -71,13 +51,8 @@ class CossoCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should update a Cosso record to completed`() {
-    webTestClient.post()
-      .uri("/cosso")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(Cosso(crn = "X000003"))
-      .exchange()
-      .expectStatus()
-      .isCreated
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(Cosso(crn = "X000003")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X000003").single()
     assertThat(cosso.crn).isEqualTo("X000003")
@@ -89,13 +64,8 @@ class CossoCrudTests : IntegrationTestBase() {
       reviewRequiredDate = LocalDateTime.now(),
     )
 
-    webTestClient.put()
-      .uri("/cosso/" + cosso.id)
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(cossoBody)
-      .exchange()
-      .expectStatus()
-      .isOk
+    webTestClient.put().uri("/cosso/" + cosso.id).headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(cossoBody).exchange().expectStatus().isOk
 
     val updatedCosso = cossoRepository.findByCrn("X000003").single()
     assertThat(updatedCosso.crn).isEqualTo("X000003")
@@ -105,44 +75,49 @@ class CossoCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should fail to create if the crn is too long`() {
-    webTestClient.post()
-      .uri("/cosso")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(Cosso(crn = "X000001123456789123456"))
-      .exchange()
-      .expectStatus().isBadRequest
-      .expectBody().jsonPath("$.userMessage").isEqualTo("""Field: crn - must match "^[A-Z][0-9]{6}"""")
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(Cosso(crn = "X000001123456789123456")).exchange().expectStatus().isBadRequest.expectBody()
+      .jsonPath("$.userMessage").isEqualTo("""Field: crn - must match "^[A-Z][0-9]{6}"""")
   }
 
   @Test
   fun `should delete a Cosso record`() {
-    webTestClient.post()
-      .uri("/cosso")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(Cosso(crn = "X000004"))
-      .exchange()
-      .expectStatus()
-      .isCreated
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(Cosso(crn = "X000004")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X000004")
     assertThat(cosso.first().crn).isEqualTo("X000004")
     assertThat(cosso.first().id).isNotNull()
 
-    webTestClient.delete()
-      .uri("/cosso/" + cosso.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .exchange()
-      .expectStatus()
-      .isOk
+    webTestClient.delete().uri("/cosso/" + cosso.first().id).headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .exchange().expectStatus().isOk
 
     assertThat(cossoRepository.findById(cosso.first().id)).isEmpty
   }
 
   @Test
-  fun `test updating cosso record all fields and address records`() {
-    val postalAddress = addressRepository.save(
-      AddressEntity(
-        id = UUID.randomUUID(),
+  fun `test updating cosso record`() {
+    val nowDate = LocalDate.now()
+    val nowDateTime = LocalDateTime.now().withNano(0)
+    val nowZoned = ZonedDateTime.now().withNano(0)
+    val dob = nowDateTime.minusYears(30)
+
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(InitialiseCosso(crn = "X000005")).exchange().expectStatus().isCreated
+
+    val created = cossoRepository.findByCrn("X000005").single()
+    val originalLastUpdated = created.lastUpdatedDatetime
+
+    val updatePayload = Cosso(
+      crn = "X000005",
+      titleAndFullName = "John Example",
+      dateOfForm = nowDate,
+      sheetSentBy = "Officer",
+      telephoneNumber = "00000000001",
+      mobileNumber = "07700000000",
+      emailAddress = "test@example.com",
+      completedDate = nowZoned,
+      postalAddress = Address(
         addressId = 1234,
         status = "Postal",
         buildingName = "Post",
@@ -152,17 +127,11 @@ class CossoCrudTests : IntegrationTestBase() {
         townCity = "London",
         county = "Greater London",
         postcode = "AA11AA",
-        createdByUser = "test-user",
-        createdDatetime = LocalDateTime.now(),
-        lastUpdatedUser = "test-user",
-        lastUpdatedDatetime = LocalDateTime.now(),
         officeDescription = "Office",
       ),
-    )
-
-    val workAddress = addressRepository.save(
-      AddressEntity(
-        id = UUID.randomUUID(),
+      dateOfBirth = dob,
+      prisonNumber = "12345678",
+      workAddress = Address(
         addressId = 5678,
         status = "Main",
         buildingName = "Work",
@@ -172,46 +141,8 @@ class CossoCrudTests : IntegrationTestBase() {
         townCity = "London",
         county = "Greater London",
         postcode = "AA11AA",
-        createdByUser = "test-user",
-        createdDatetime = LocalDateTime.now(),
-        lastUpdatedUser = "test-user",
-        lastUpdatedDatetime = LocalDateTime.now(),
         officeDescription = "Office",
       ),
-    )
-
-    val nowDate = LocalDate.now()
-    val nowDateTime = LocalDateTime.now().withNano(0)
-    val nowZoned = ZonedDateTime.now().withNano(0)
-    val dob = nowDateTime.minusYears(30)
-
-    webTestClient.post()
-      .uri("/cosso")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(
-        InitialiseCosso(
-          crn = "X777777",
-        ),
-      )
-      .exchange()
-      .expectStatus().isCreated
-
-    val created = cossoRepository.findByCrn("X777777").single()
-    val originalLastUpdated = created.lastUpdatedDatetime
-
-    val updatePayload = Cosso(
-      crn = "X777777",
-      titleAndFullName = "John Example",
-      dateOfForm = nowDate,
-      sheetSentBy = "Officer",
-      telephoneNumber = "00000000001",
-      mobileNumber = "07700000000",
-      emailAddress = "test@example.com",
-      completedDate = nowZoned,
-      postalAddressId = postalAddress.id,
-      dateOfBirth = dob,
-      prisonNumber = "12345678",
-      workAddressId = workAddress.id,
       probationArea = "London",
       witnessAvailability = "Always",
       mainOffence = "Robbery",
@@ -243,16 +174,13 @@ class CossoCrudTests : IntegrationTestBase() {
       reviewEvent = "EVENT_MOVE",
     )
 
-    webTestClient.put()
-      .uri("/cosso/${created.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
-      .bodyValue(updatePayload)
-      .exchange()
-      .expectStatus().isOk
+    webTestClient.put().uri("/cosso/${created.id}").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .bodyValue(updatePayload).exchange().expectStatus().isOk
 
-    val updated = cossoRepository.findByCrn("X777777").single()
+    val updated = cossoRepository.findByCrn("X000005").single()
 
-    assertThat(updated.crn).isEqualTo("X777777")
+    assertThat(updated.postalAddress?.postcode).isEqualTo("AA11AA")
+    assertThat(updated.workAddress?.buildingName).isEqualTo("Work")
     assertThat(updated.titleAndFullName).isEqualTo("John Example")
     assertThat(updated.dateOfForm).isEqualTo(nowDate)
     assertThat(updated.sheetSentBy).isEqualTo("Officer")
@@ -260,8 +188,6 @@ class CossoCrudTests : IntegrationTestBase() {
     assertThat(updated.mobileNumber).isEqualTo("07700000000")
     assertThat(updated.emailAddress).isEqualTo("test@example.com")
     assertThat(updated.completedDate?.withNano(0)).isEqualTo(nowZoned)
-    assertThat(updated.postalAddress?.id).isEqualTo(postalAddress.id)
-    assertThat(updated.workAddress?.id).isEqualTo(workAddress.id)
     assertThat(updated.dateOfBirth).isEqualTo(dob)
     assertThat(updated.prisonNumber).isEqualTo("12345678")
     assertThat(updated.probationArea).isEqualTo("London")
