@@ -19,7 +19,7 @@ class PdfGenerationTests : IntegrationTestBase() {
   fun `get PDF should return a 200 response`() {
     webTestClient.post()
       .uri("/cosso")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X800001"))
       .exchange()
       .expectStatus()
@@ -32,7 +32,7 @@ class PdfGenerationTests : IntegrationTestBase() {
       .mutate().responseTimeout(Duration.ofSeconds(30)).build()
       .get()
       .uri("/cosso/" + cosso[0].id + "/pdf")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .exchange()
       .expectStatus()
       .isOk
@@ -46,7 +46,7 @@ class PdfGenerationTests : IntegrationTestBase() {
   fun `get PDF should return a 404 response if not found`() {
     webTestClient.post()
       .uri("/cosso")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X800002"))
       .exchange()
       .expectStatus()
@@ -57,7 +57,7 @@ class PdfGenerationTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri("/cosso/" + UUID.randomUUID() + "/pdf")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .exchange()
       .expectStatus().isNotFound
   }

@@ -18,7 +18,7 @@ class CossoCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should create a Cosso record`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X000001")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X000001").single()
@@ -28,7 +28,7 @@ class CossoCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should update a Cosso record`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X000002")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X000002").single()
@@ -41,7 +41,7 @@ class CossoCrudTests : IntegrationTestBase() {
       reviewRequiredDate = LocalDateTime.now(),
     )
 
-    webTestClient.put().uri("/cosso/" + cosso.id).headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.put().uri("/cosso/" + cosso.id).headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(cossoBody).exchange().expectStatus().isOk
 
     val updatedCosso = cossoRepository.findByCrn("X000002").single()
@@ -51,7 +51,7 @@ class CossoCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should update a Cosso record to completed`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X000003")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X000003").single()
@@ -64,7 +64,7 @@ class CossoCrudTests : IntegrationTestBase() {
       reviewRequiredDate = LocalDateTime.now(),
     )
 
-    webTestClient.put().uri("/cosso/" + cosso.id).headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.put().uri("/cosso/" + cosso.id).headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(cossoBody).exchange().expectStatus().isOk
 
     val updatedCosso = cossoRepository.findByCrn("X000003").single()
@@ -75,21 +75,21 @@ class CossoCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should fail to create if the crn is too long`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X000001123456789123456")).exchange().expectStatus().isBadRequest.expectBody()
       .jsonPath("$.userMessage").isEqualTo("""Field: crn - must match "^[A-Z][0-9]{6}"""")
   }
 
   @Test
   fun `should delete a Cosso record`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X000004")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X000004")
     assertThat(cosso.first().crn).isEqualTo("X000004")
     assertThat(cosso.first().id).isNotNull()
 
-    webTestClient.delete().uri("/cosso/" + cosso.first().id).headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.delete().uri("/cosso/" + cosso.first().id).headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .exchange().expectStatus().isOk
 
     assertThat(cossoRepository.findById(cosso.first().id)).isEmpty
@@ -102,7 +102,7 @@ class CossoCrudTests : IntegrationTestBase() {
     val nowZoned = ZonedDateTime.now().withNano(0)
     val dob = nowDateTime.minusYears(30)
 
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(InitialiseCosso(crn = "X000005")).exchange().expectStatus().isCreated
 
     val created = cossoRepository.findByCrn("X000005").single()
@@ -174,7 +174,7 @@ class CossoCrudTests : IntegrationTestBase() {
       reviewEvent = "EVENT_MOVE",
     )
 
-    webTestClient.put().uri("/cosso/${created.id}").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.put().uri("/cosso/${created.id}").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(updatePayload).exchange().expectStatus().isOk
 
     val updated = cossoRepository.findByCrn("X000005").single()
