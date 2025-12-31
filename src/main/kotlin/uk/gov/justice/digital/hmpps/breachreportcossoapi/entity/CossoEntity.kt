@@ -58,8 +58,7 @@ data class CossoEntity(
   var amendmentReason: String? = null,
   var whyInBreach: String? = null,
   var stepsToPreventBreach: String? = null,
-  @Column(name = "compliance_o_date")
-  var complianceODate: String? = null,
+  var complianceToDate: String? = null,
   var riskHistory: String? = null,
   var recommendations: String? = null,
   var supportingComments: String? = null,

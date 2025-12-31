@@ -161,7 +161,7 @@ class CossoCrudTests : IntegrationTestBase() {
       amendmentReason = "Testing update",
       whyInBreach = "No attendance",
       stepsToPreventBreach = "Weekly reporting",
-      complianceODate = "01/01/2025",
+      complianceToDate = "01/01/2025",
       riskHistory = "Risk history text",
       recommendations = "Recommendations text",
       supportingComments = "Supporting comments text",
@@ -208,7 +208,7 @@ class CossoCrudTests : IntegrationTestBase() {
     assertThat(updated.amendmentReason).isEqualTo("Testing update")
     assertThat(updated.whyInBreach).isEqualTo("No attendance")
     assertThat(updated.stepsToPreventBreach).isEqualTo("Weekly reporting")
-    assertThat(updated.complianceODate).isEqualTo("01/01/2025")
+    assertThat(updated.complianceToDate).isEqualTo("01/01/2025")
     assertThat(updated.riskHistory).isEqualTo("Risk history text")
     assertThat(updated.recommendations).isEqualTo("Recommendations text")
     assertThat(updated.supportingComments).isEqualTo("Supporting comments text")
