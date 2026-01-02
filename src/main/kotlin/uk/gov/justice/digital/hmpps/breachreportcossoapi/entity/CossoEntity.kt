@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.entity
 
 import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
