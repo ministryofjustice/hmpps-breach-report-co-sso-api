@@ -37,7 +37,7 @@ data class Cosso(
   var amendmentReason: String? = null,
   var whyInBreach: String? = null,
   var stepsToPreventBreach: String? = null,
-  var complianceODate: String? = null,
+  var complianceToDate: String? = null,
   var riskHistory: String? = null,
   var recommendations: String? = null,
   var supportingComments: String? = null,

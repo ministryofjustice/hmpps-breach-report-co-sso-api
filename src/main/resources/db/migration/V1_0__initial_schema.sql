@@ -50,7 +50,7 @@ CREATE TABLE public.cosso
     amendment_reason            varchar(20000),
     why_in_breach               varchar(20000),
     steps_to_prevent_breach     varchar(20000),
-    compliance_o_date           varchar(20000),
+    compliance_to_date          varchar(20000),
     risk_history                text,
     recommendations             varchar(20000),
     supporting_comments         varchar(20000),
@@ -124,17 +124,44 @@ VALUES
     ),
 
     (gen_random_uuid(), 'failures_and_enforcements', 'compliance_to_date',
-     'Compliance with Order / sentence to date
-     By assessing both compliance and engagement regarding all elements of the sentence to date and likely future engagement, the court can make an informed decision on its response to the breach:
+     'By assessing both compliance and engagement regarding all elements of the sentence to date and likely future engagement, the court can make an informed decision on its response to the breach:
 
-     Compliance:
-     Outline the person’s level of attendance on all elements of the Order/PSS...'
+        Compliance
+
+        Outline the person’s level of attendance on all elements of the Order/PSS, including those not subject to the breach and completed requirements. Detail number of previous absences and the reasons for these. Provide information about any previous breaches/amendments outlined in Section 4.
+
+        In cases of PSS: Failures to comply with the licence cannot legally have any bearing on enforcement of the PSS. Provide a brief summary only of compliance during the licence, for context, and where relevant specify if the PSS has resulted from the breach of a prior community sentence.
+
+        Engagement
+
+        Brief overview of progress and engagement on each element of the Order or PSS e.g., summary of work completed, progress on sentence plan, progress in addressing factors relevant to risk, offending, protective factors, and adherence to the risk management plan.
+
+        Explain why any element of the sentence has not commenced, if relevant.
+
+        Assess the person’s attitude to the Order/PSS moving forward
+
+        The reasons for non-compliance, how enduring they are, engagement/attendance since the breach and response to addressing any diversity factors or other barriers.'
     ),
 
     (gen_random_uuid(), 'failures_and_enforcements', 'risk_of_serious_harm',
-     'summarise the risk of serious harm assessment at the commencement of the sentence and explain any changes to the level of risk...'
+     'summarise the risk of serious harm assessment at the commencement of the sentence and explain any changes to the level of risk, factors that impact on the likelihood of future harm, the nature of the risk or who is at risk. Explain whether changes in risk have resulted from non-compliance, poor behaviour, or other factors and, where relevant, how changes in risk impact on future compliance and steps that are being taken to manage it.'
     ),
 
     (gen_random_uuid(), 'failures_and_enforcements', 'recommendation',
-     'The proposal should be commensurate with the seriousness of the breach, the original offence, and the preceding analysis...'
+     'The proposal should be commensurate with the seriousness of the breach, the original offence, and the preceding analysis. Sentencing guidelines should be consulted and a strong rationale provided for any departure from these:
+        Breach of Community Order; Breach of suspended sentence order; Breach of Post Sentence Supervision and Supervision Default Orders.
+
+        Consult Sentencing Options in Section 2 below and breach sentencing guidelines table in Annex A.
+
+        The proposal should seek to address factors contributing to the breach, wherever possible, including any diversity factors or other barriers to compliance assessed as relevant.
+
+        Communicate the rationale for the proposal:
+
+        Why it is suitable considering the circumstances of the breach, level of compliance and progress, and assessment of future compliance
+        Outline alternative options that were considered and the person’s suitability for these
+        How factors that contributed to the breach will be addressed going forwards
+        Any specific factors that have influenced the proposal e.g., if concerns about risk have informed the proposal or are relevant to the breach, or where the proposal addresses the root cause of the breach
+        How relevant diversity factors or other barriers identified as a consideration in the breach will be addressed going forwards, or why this is not possible
+        Where relevant, why the current Order is not considered suitable
+        Where relevant, be clear if you are unable to make a firm proposal e.g., there is insufficient information to inform suitability, but such information will be sought and communicated prior to the breach hearing.'
     );
