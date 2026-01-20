@@ -48,4 +48,5 @@ data class Cosso(
   var contactSaved: Boolean? = null,
   var reviewRequiredDate: LocalDateTime? = null,
   var reviewEvent: String? = null,
+  var amendments: List<Amendment> = emptyList(),
 )
