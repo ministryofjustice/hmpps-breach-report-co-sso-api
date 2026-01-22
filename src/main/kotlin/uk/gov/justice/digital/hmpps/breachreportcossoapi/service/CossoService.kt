@@ -5,10 +5,12 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AddressEntity
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AmendmentEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.CossoEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.exception.NotFoundException
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Address
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Amendment
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Cosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.InitialiseCosso
@@ -196,6 +198,7 @@ class CossoService(
     contactSaved = contactSaved,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
+    amendments = amendments.map { it.toModel() },
   )
 
   private fun Address.toEntity(existingEntity: AddressEntity? = null) = existingEntity?.copy(
@@ -234,6 +237,14 @@ class CossoService(
     county = county,
     postcode = postcode,
     officeDescription = officeDescription,
+  )
+
+  private fun AmendmentEntity.toModel() = Amendment(
+    id = id,
+    cossoId = cosso.id,
+    amendmentDetails = amendmentDetails,
+    amendmentReason = amendmentReason,
+    amendmentDate = amendmentDate,
   )
 
   fun getActiveCossoForCrn(crn: String?): Collection<CossoEntity> = cossoRepository.findByCrnAndCompletedDateIsNull(crn)

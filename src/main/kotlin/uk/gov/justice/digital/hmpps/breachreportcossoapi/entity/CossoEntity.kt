@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
@@ -68,6 +69,8 @@ data class CossoEntity(
   var contactSaved: Boolean? = null,
   var reviewRequiredDate: LocalDateTime? = null,
   var reviewEvent: String? = null,
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "cosso")
+  val amendments: MutableList<AmendmentEntity> = mutableListOf(),
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate
