@@ -28,5 +28,5 @@ data class RequirementEntity(
   @LastModifiedBy
   var lastUpdatedUser: String? = null,
   @LastModifiedDate
-  var lastUpdatedDatetime: LocalDateTime? = null
+  var lastUpdatedDatetime: LocalDateTime? = null,
 )

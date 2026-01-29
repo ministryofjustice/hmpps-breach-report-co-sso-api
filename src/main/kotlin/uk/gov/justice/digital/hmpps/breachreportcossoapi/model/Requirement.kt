@@ -14,5 +14,5 @@ data class Requirement(
   val createdByUser: String? = null,
   val createdDatetime: LocalDateTime? = null,
   val lastUpdatedUser: String? = null,
-  val lastUpdatedDatetime: LocalDateTime? = null
+  val lastUpdatedDatetime: LocalDateTime? = null,
 )

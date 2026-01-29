@@ -265,7 +265,7 @@ class CossoService(
     cossoId = this.id,
     contactTypeDescription = this.contactTypeDescription,
     contactPerson = this.contactPerson,
-    )
+  )
 
   private fun RequirementEntity.toModel() = Requirement(
     id = this.id,
@@ -274,6 +274,6 @@ class CossoService(
     requirementTypeMainCategoryDescription = this.requirementTypeMainCategoryDescription,
     requirementTypeSubCategoryDescription = this.requirementTypeSubCategoryDescription,
     requirementLength = this.requirementLength,
-    requirementSecondLength = this.requirementSecondLength
+    requirementSecondLength = this.requirementSecondLength,
   )
 }
