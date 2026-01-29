@@ -6,14 +6,18 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AmendmentEntity
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.CossoEntity
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.RequirementEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.exception.NotFoundException
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Address
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Amendment
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Contact
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Cosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.InitialiseCosso
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Requirement
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -94,9 +98,6 @@ class CossoService(
     suspendedCustodyLength = suspendedCustodyLength,
     secondLength = secondLength,
     secondLengthUnits = secondLengthUnits,
-    requirementType = requirementType,
-    requirementLength = requirementLength,
-    requirementSecondLength = requirementSecondLength,
     amendmentDetails = amendmentDetails,
     amendmentReason = amendmentReason,
     whyInBreach = whyInBreach,
@@ -136,9 +137,6 @@ class CossoService(
     suspendedCustodyLength = suspendedCustodyLength,
     secondLength = secondLength,
     secondLengthUnits = secondLengthUnits,
-    requirementType = requirementType,
-    requirementLength = requirementLength,
-    requirementSecondLength = requirementSecondLength,
     amendmentDetails = amendmentDetails,
     amendmentReason = amendmentReason,
     whyInBreach = whyInBreach,
@@ -180,9 +178,6 @@ class CossoService(
     suspendedCustodyLength = suspendedCustodyLength,
     secondLength = secondLength,
     secondLengthUnits = secondLengthUnits,
-    requirementType = requirementType,
-    requirementLength = requirementLength,
-    requirementSecondLength = requirementSecondLength,
     amendmentDetails = amendmentDetails,
     amendmentReason = amendmentReason,
     whyInBreach = whyInBreach,
@@ -199,6 +194,8 @@ class CossoService(
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
     amendments = amendments.map { it.toModel() },
+    cossoContactList = cossoContactList.map { it.toModel() },
+    requirementList = cossoRequirementList.map { it.toModel() },
   )
 
   private fun Address.toEntity(existingEntity: AddressEntity? = null) = existingEntity?.copy(
@@ -263,4 +260,20 @@ class CossoService(
   fun deleteAllByCrn(crn: String) {
     cossoRepository.deleteByCrn(crn)
   }
+
+  private fun ContactEntity.toModel() = Contact(
+    cossoId = this.id,
+    contactTypeDescription = this.contactTypeDescription,
+    contactPerson = this.contactPerson,
+  )
+
+  private fun RequirementEntity.toModel() = Requirement(
+    id = this.id,
+    cossoId = this.cosso.id,
+    deliusRequirementId = this.deliusRequirementId,
+    requirementTypeMainCategoryDescription = this.requirementTypeMainCategoryDescription,
+    requirementTypeSubCategoryDescription = this.requirementTypeSubCategoryDescription,
+    requirementLength = this.requirementLength,
+    requirementSecondLength = this.requirementSecondLength,
+  )
 }

@@ -154,9 +154,6 @@ class CossoCrudTests : IntegrationTestBase() {
       suspendedCustodyLength = "None",
       secondLength = "2",
       secondLengthUnits = "Months",
-      requirementType = "Community Order",
-      requirementLength = "150",
-      requirementSecondLength = "Hours",
       amendmentDetails = "Updated for test",
       amendmentReason = "Testing update",
       whyInBreach = "No attendance",
@@ -201,9 +198,6 @@ class CossoCrudTests : IntegrationTestBase() {
     assertThat(updated.suspendedCustodyLength).isEqualTo("None")
     assertThat(updated.secondLength).isEqualTo("2")
     assertThat(updated.secondLengthUnits).isEqualTo("Months")
-    assertThat(updated.requirementType).isEqualTo("Community Order")
-    assertThat(updated.requirementLength).isEqualTo("150")
-    assertThat(updated.requirementSecondLength).isEqualTo("Hours")
     assertThat(updated.amendmentDetails).isEqualTo("Updated for test")
     assertThat(updated.amendmentReason).isEqualTo("Testing update")
     assertThat(updated.whyInBreach).isEqualTo("No attendance")

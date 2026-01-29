@@ -1,5 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.model
 
+import com.fasterxml.jackson.annotation.JsonSetter
+import com.fasterxml.jackson.annotation.Nulls
 import jakarta.validation.constraints.Pattern
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -30,9 +32,6 @@ data class Cosso(
   var suspendedCustodyLength: String? = null,
   var secondLength: String? = null,
   var secondLengthUnits: String? = null,
-  var requirementType: String? = null,
-  var requirementLength: String? = null,
-  var requirementSecondLength: String? = null,
   var amendmentDetails: String? = null,
   var amendmentReason: String? = null,
   var whyInBreach: String? = null,
@@ -49,4 +48,8 @@ data class Cosso(
   var reviewRequiredDate: LocalDateTime? = null,
   var reviewEvent: String? = null,
   var amendments: List<Amendment> = emptyList(),
+  @field:JsonSetter(nulls = Nulls.AS_EMPTY)
+  var cossoContactList: List<Contact> = emptyList(),
+  @field:JsonSetter(nulls = Nulls.AS_EMPTY)
+  var requirementList: List<Requirement> = emptyList(),
 )

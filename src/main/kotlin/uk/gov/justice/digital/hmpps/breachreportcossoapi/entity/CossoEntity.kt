@@ -51,9 +51,6 @@ data class CossoEntity(
   var suspendedCustodyLength: String? = null,
   var secondLength: String? = null,
   var secondLengthUnits: String? = null,
-  var requirementType: String? = null,
-  var requirementLength: String? = null,
-  var requirementSecondLength: String? = null,
   var amendmentDetails: String? = null,
   var amendmentReason: String? = null,
   var whyInBreach: String? = null,
@@ -71,6 +68,10 @@ data class CossoEntity(
   var reviewEvent: String? = null,
   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "cosso")
   val amendments: MutableList<AmendmentEntity> = mutableListOf(),
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "cosso")
+  val cossoContactList: MutableList<ContactEntity> = mutableListOf(),
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "cosso")
+  val cossoRequirementList: MutableList<RequirementEntity> = mutableListOf(),
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate
