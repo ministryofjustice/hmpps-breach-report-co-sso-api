@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,7 +30,7 @@ import java.util.UUID
 
 @Validated
 @RestController
-// TODO: Add this once role added to auth @PreAuthorize("hasRole('ROLE_CO_SSO')")
+@PreAuthorize("hasRole('ROLE_COSSO')")
 @RequestMapping(value = ["/cosso"], produces = ["application/json"])
 class CossoController(
   private val cossoService: CossoService,

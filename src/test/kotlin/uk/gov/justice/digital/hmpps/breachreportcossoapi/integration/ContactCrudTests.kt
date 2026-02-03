@@ -68,7 +68,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.post()
       .uri("/cosso/contact")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(payload)
       .exchange()
       .expectStatus().isCreated
@@ -109,7 +109,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/cosso/contact/${existing.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(updatePayload)
       .exchange()
       .expectStatus().isOk
@@ -150,7 +150,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/cosso/contact/${existing.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(updatePayload)
       .exchange()
       .expectStatus().isOk
@@ -183,7 +183,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri("/cosso/contact/${existing.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .exchange()
       .expectStatus().isOk
       .expectBody()
@@ -212,7 +212,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.delete()
       .uri("/cosso/contact/${contact.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .exchange()
       .expectStatus().isOk
 
