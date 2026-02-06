@@ -30,6 +30,8 @@ data class ContactEntity(
   @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
   @JoinColumn(name = "contact_location_id", unique = true)
   var contactLocation: AddressEntity? = null,
+  var contactDate: LocalDateTime? = null,
+  var contactOutcome: String? = null,
   var formSent: Boolean? = null,
   @CreatedBy
   var createdByUser: String? = null,

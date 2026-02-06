@@ -23,8 +23,8 @@ data class RequirementEntity(
   var deliusRequirementId: Long,
   var requirementTypeMainCategoryDescription: String? = null,
   var requirementTypeSubCategoryDescription: String? = null,
-  var requirementLength: Long? = null,
-  var requirementSecondLength: Long? = null,
+  var requirementLength: String? = null,
+  var requirementSecondLength: String? = null,
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate

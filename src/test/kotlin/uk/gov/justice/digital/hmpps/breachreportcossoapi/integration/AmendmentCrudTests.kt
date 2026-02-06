@@ -21,12 +21,12 @@ class AmendmentCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should create an amendment record`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X200001")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X200001").single()
 
-    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Amendment(cossoId = cosso.id, amendmentReason = "Reason", amendmentDetails = "Details", amendmentDate = LocalDate.now())).exchange().expectStatus().isCreated
 
     val amendment = amendmentRepository.findAllByCossoId(cosso.id).single()
@@ -36,12 +36,12 @@ class AmendmentCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should update an amendment record`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X200002")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X200002").single()
 
-    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Amendment(cossoId = cosso.id, amendmentReason = "Reason", amendmentDetails = "Details", amendmentDate = LocalDate.now())).exchange().expectStatus().isCreated
 
     val amendment = amendmentRepository.findAllByCossoId(cosso.id).single()
@@ -53,7 +53,7 @@ class AmendmentCrudTests : IntegrationTestBase() {
       amendmentDetails = "Updated details",
     )
 
-    webTestClient.put().uri("/cosso/amendment/" + amendment.id).headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.put().uri("/cosso/amendment/" + amendment.id).headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(amendmentBody).exchange().expectStatus().isOk
 
     val updatedAmendment = amendmentRepository.findAllByCossoId(cosso.id).single()
@@ -64,7 +64,7 @@ class AmendmentCrudTests : IntegrationTestBase() {
   @Test
   fun `should fail to create if the cosso id is not found`() {
     val randomUuid = UUID.randomUUID()
-    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Amendment(cossoId = randomUuid, amendmentReason = "Reason", amendmentDetails = "Details", amendmentDate = LocalDate.now()))
       .exchange().expectStatus().isBadRequest.expectBody()
       .jsonPath("$.userMessage").isEqualTo("Validation failure: Cosso $randomUuid not found")
@@ -72,12 +72,12 @@ class AmendmentCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should delete a Cosso record`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Cosso(crn = "X200004")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X200004").single()
 
-    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Amendment(cossoId = cosso.id, amendmentReason = "Reason", amendmentDetails = "Details", amendmentDate = LocalDate.now())).exchange().expectStatus().isCreated
 
     val amendment = amendmentRepository.findAllByCossoId(cosso.id)
@@ -92,7 +92,7 @@ class AmendmentCrudTests : IntegrationTestBase() {
 
   @Test
   fun `test updating cosso record`() {
-    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(InitialiseCosso(crn = "X200005")).exchange().expectStatus().isCreated
 
     val cosso = cossoRepository.findByCrn("X200005").single()

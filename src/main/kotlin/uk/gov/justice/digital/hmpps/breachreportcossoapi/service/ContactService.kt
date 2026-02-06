@@ -47,6 +47,8 @@ class ContactService(
     contactPerson = contactPerson,
     contactLocationId = contactLocation?.id,
     formSent = formSent,
+    contactDate = contactDate,
+    contactOutcome = contactOutcome,
   )
 
   fun Contact.toEntity(existing: ContactEntity? = null): ContactEntity {
@@ -72,6 +74,8 @@ class ContactService(
       contactPerson = contactPerson,
       contactLocation = addressEntity,
       formSent = formSent,
+      contactDate = contactDate,
+      contactOutcome = contactOutcome,
     )
   }
 }
