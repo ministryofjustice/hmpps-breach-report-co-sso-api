@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.integration
 
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AddressEntity
@@ -217,5 +218,74 @@ class ContactCrudTests : IntegrationTestBase() {
       .expectStatus().isOk
 
     assertThat(contactRepository.findById(contact.id)).isEmpty
+  }
+
+  @Test
+  fun `should fetch all contacts linked to a cosso id`() {
+    val cossoA = createCosso("X100006")
+    val cossoB = createCosso("X100007")
+
+    contactRepository.save(
+      ContactEntity(
+        id = UUID.randomUUID(),
+        cosso = cossoA,
+        contactTypeDescription = "TypeOne",
+        contactPerson = "Officer A",
+        deliusContactId = 1,
+        createdByUser = "test.user",
+        createdDatetime = LocalDateTime.now(),
+        lastUpdatedUser = "test.user",
+        lastUpdatedDatetime = LocalDateTime.now(),
+      ),
+    )
+    contactRepository.save(
+      ContactEntity(
+        id = UUID.randomUUID(),
+        cosso = cossoB,
+        contactTypeDescription = "TypeTwo",
+        contactPerson = "Officer A",
+        deliusContactId = 2,
+        createdByUser = "test.user",
+        createdDatetime = LocalDateTime.now(),
+        lastUpdatedUser = "test.user",
+        lastUpdatedDatetime = LocalDateTime.now(),
+      ),
+    )
+
+    contactRepository.save(
+      ContactEntity(
+        id = UUID.randomUUID(),
+        cosso = cossoA,
+        contactTypeDescription = "TypeThree",
+        contactPerson = "Officer B",
+        deliusContactId = 3,
+        createdByUser = "test.user",
+        createdDatetime = LocalDateTime.now(),
+        lastUpdatedUser = "test.user",
+        lastUpdatedDatetime = LocalDateTime.now(),
+      ),
+    )
+
+    webTestClient.get()
+      .uri("/cosso/contact/bycossoid/${cossoA.id}")
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .exchange()
+      .expectStatus().isOk
+      .expectBody()
+      .jsonPath("$.length()").isEqualTo(2)
+      .jsonPath("$.[0].contactTypeDescription").value(containsString("TypeOne"))
+      .jsonPath("$.[0].deliusContactId").isEqualTo(1)
+      .jsonPath("$.[1].contactTypeDescription").value(containsString("TypeThree"))
+      .jsonPath("$.[1].deliusContactId").isEqualTo(3)
+
+    webTestClient.get()
+      .uri("/cosso/contact/bycossoid/${cossoB.id}")
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .exchange()
+      .expectStatus().isOk
+      .expectBody()
+      .jsonPath("$.length()").isEqualTo(1)
+      .jsonPath("$.[0].contactTypeDescription").value(containsString("TypeTwo"))
+      .jsonPath("$.[0].deliusContactId").isEqualTo(2)
   }
 }

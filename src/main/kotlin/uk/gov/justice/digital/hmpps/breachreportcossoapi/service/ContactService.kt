@@ -41,12 +41,16 @@ class ContactService(
     NotFoundException("Contact id $id not found")
   }.toModel()
 
+  fun fetchCossoContacts(id: UUID): List<Contact> = contactRepository.findAllByCossoId(id).map { it.toModel() }
+
   fun ContactEntity.toModel(): Contact = Contact(
+    id = id,
     cossoId = cosso?.id,
     contactTypeDescription = contactTypeDescription,
     contactPerson = contactPerson,
     contactLocationId = contactLocation?.id,
     formSent = formSent,
+    deliusContactId = deliusContactId,
     contactDate = contactDate,
     contactOutcome = contactOutcome,
   )
@@ -68,12 +72,14 @@ class ContactService(
       contactPerson = contactPerson,
       contactLocation = addressEntity,
       formSent = formSent,
+      deliusContactId = deliusContactId,
     ) ?: ContactEntity(
       cosso = cossoEntity,
       contactTypeDescription = contactTypeDescription,
       contactPerson = contactPerson,
       contactLocation = addressEntity,
       formSent = formSent,
+      deliusContactId = deliusContactId,
       contactDate = contactDate,
       contactOutcome = contactOutcome,
     )

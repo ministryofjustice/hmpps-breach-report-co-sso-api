@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpStatus
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,7 +20,7 @@ import java.util.UUID
 
 @Validated
 @RestController
-@PreAuthorize("hasRole('ROLE_COSSO')")
+// @PreAuthorize("hasRole('ROLE_COSSO')")
 @RequestMapping(value = ["/cosso/contact"], produces = ["application/json"])
 class ContactController(
   private val contactService: ContactService,
@@ -83,4 +82,18 @@ class ContactController(
     ],
   )
   fun getContact(@PathVariable id: UUID) = contactService.getContact(id)
+
+  @GetMapping("/bycossoid/{cossoId}")
+  @Operation(
+    summary = "Retrieve a Breach Notice Contact",
+    description = "Calls through the breach notice service to retrieve a list of breach notice contacts using breach notice id",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Contacts returned"),
+      ApiResponse(responseCode = "401", description = "Unauthorized"),
+      ApiResponse(responseCode = "403", description = "Forbidden"),
+      ApiResponse(responseCode = "404", description = "CossoId not found"),
+    ],
+  )
+  fun getCossoContacts(@PathVariable cossoId: UUID): List<Contact> = contactService.fetchCossoContacts(cossoId)
 }

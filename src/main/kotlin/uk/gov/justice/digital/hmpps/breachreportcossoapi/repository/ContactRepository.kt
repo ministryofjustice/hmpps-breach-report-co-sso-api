@@ -6,4 +6,6 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.ContactEntity
 import java.util.UUID
 
 @Repository
-interface ContactRepository : JpaRepository<ContactEntity, UUID>
+interface ContactRepository : JpaRepository<ContactEntity, UUID> {
+  fun findAllByCossoId(cossoId: UUID): List<ContactEntity>
+}

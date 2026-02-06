@@ -18,6 +18,7 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Cosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.InitialiseCosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Requirement
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -26,6 +27,7 @@ import java.util.UUID
 class CossoService(
   val cossoRepository: CossoRepository,
   val pdfGenerationService: PdfGenerationService,
+  val addressRepository: AddressRepository,
   @Value("\${frontend.url}") val frontendUrl: String,
 ) {
 
@@ -122,7 +124,16 @@ class CossoService(
     contactSaved = contactSaved,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
-  ) ?: CossoEntity(
+    cossoContactList = cossoContactList.map {
+      it.toEntity(
+        existingEntity.cossoContactList.find { existingContactEntity ->
+          existingContactEntity.id == it.id
+        },
+      )
+    } as MutableList<ContactEntity>,
+  )?.also { cosso ->
+    cosso.cossoContactList.forEach { it.cosso = cosso }
+  } ?: CossoEntity(
     crn = crn,
     titleAndFullName = titleAndFullName,
     dateOfForm = dateOfForm,
@@ -170,6 +181,7 @@ class CossoService(
     contactSaved = contactSaved,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
+    cossoContactList = cossoContactList.map { it.toEntity() } as MutableList<ContactEntity>,
   )
 
   fun CossoEntity.toModel(): Cosso = Cosso(
@@ -263,6 +275,34 @@ class CossoService(
     officeDescription = officeDescription,
   )
 
+  fun Contact.toEntity(existing: ContactEntity? = null): ContactEntity {
+    val cossoEntity = cossoId?.let {
+      cossoRepository.findById(it).orElseThrow {
+        IllegalArgumentException("Cosso $it not found")
+      }
+    }
+
+    val addressEntity = contactLocationId?.let {
+      addressRepository.findById(it).orElse(null)
+    }
+
+    return existing?.copy(
+      cosso = cossoEntity,
+      contactTypeDescription = contactTypeDescription,
+      contactPerson = contactPerson,
+      contactLocation = addressEntity,
+      formSent = formSent,
+      deliusContactId = deliusContactId,
+    ) ?: ContactEntity(
+      cosso = cossoEntity,
+      contactTypeDescription = contactTypeDescription,
+      contactPerson = contactPerson,
+      contactLocation = addressEntity,
+      formSent = formSent,
+      deliusContactId = deliusContactId,
+    )
+  }
+
   private fun AmendmentEntity.toModel() = Amendment(
     id = id,
     cossoId = cosso.id,
@@ -289,11 +329,15 @@ class CossoService(
   }
 
   private fun ContactEntity.toModel() = Contact(
-    cossoId = this.id,
+    cossoId = this.cosso?.id,
     contactTypeDescription = this.contactTypeDescription,
     contactPerson = this.contactPerson,
     contactOutcome = this.contactOutcome,
     contactDate = this.contactDate,
+    id = this.id,
+    contactLocationId = this.contactLocation?.id,
+    formSent = this.formSent,
+    deliusContactId = this.deliusContactId,
   )
 
   private fun RequirementEntity.toModel() = Requirement(
