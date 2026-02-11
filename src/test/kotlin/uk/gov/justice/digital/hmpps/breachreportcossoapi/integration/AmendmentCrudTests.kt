@@ -84,7 +84,7 @@ class AmendmentCrudTests : IntegrationTestBase() {
     assertThat { amendment.first().cosso.id == cosso.id }
     assertThat { amendment.first().id }.isNotNull()
 
-    webTestClient.delete().uri("/cosso/amendment/" + amendment.first().id).headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.delete().uri("/cosso/amendment/" + amendment.first().id).headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .exchange().expectStatus().isOk
 
     assertThat(cossoRepository.findById(amendment.first().id)).isEmpty
@@ -97,7 +97,7 @@ class AmendmentCrudTests : IntegrationTestBase() {
 
     val cosso = cossoRepository.findByCrn("X200005").single()
 
-    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.post().uri("/cosso/amendment").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(Amendment(cossoId = cosso.id, amendmentReason = "Reason", amendmentDetails = "Details", amendmentDate = LocalDate.now())).exchange().expectStatus().isCreated
 
     val originalAmendment = amendmentRepository.findAllByCossoId(cosso.id).single()
@@ -111,7 +111,7 @@ class AmendmentCrudTests : IntegrationTestBase() {
       amendmentDetails = "Updated details",
     )
 
-    webTestClient.put().uri("/cosso/amendment/${originalAmendment.id}").headers(setAuthorisation(roles = listOf("ROLE_CO_SSO")))
+    webTestClient.put().uri("/cosso/amendment/${originalAmendment.id}").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
       .bodyValue(updatePayload).exchange().expectStatus().isOk
 
     val updatedAmendment = amendmentRepository.findAllByCossoId(cosso.id).single()

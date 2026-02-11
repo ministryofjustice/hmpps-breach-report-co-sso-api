@@ -3,18 +3,24 @@ package uk.gov.justice.digital.hmpps.breachreportcossoapi.integration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Address
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Cosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.InitialiseCosso
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
+import java.util.UUID
 
 class CossoCrudTests : IntegrationTestBase() {
 
   @Autowired
   private lateinit var cossoRepository: CossoRepository
+
+  @Autowired
+  private lateinit var contactRepository: ContactRepository
 
   @Test
   fun `should create a Cosso record`() {
@@ -217,5 +223,55 @@ class CossoCrudTests : IntegrationTestBase() {
     assertThat(updated.createdByUser).isEqualTo(created.createdByUser)
     assertThat(updated.lastUpdatedDatetime).isNotEqualTo(originalLastUpdated)
     assertThat(updated.lastUpdatedUser).isNotBlank()
+  }
+
+  @Test
+  fun `cosso should pull linked contact records`() {
+    webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .bodyValue(Cosso(crn = "X000006")).exchange().expectStatus().isCreated
+
+    val cosso = cossoRepository.findByCrn("X000006").single()
+    val contactOneId = UUID.randomUUID()
+    val contactTwoId = UUID.randomUUID()
+    contactRepository.save(
+      ContactEntity(
+        id = contactOneId,
+        cosso = cosso,
+        contactTypeDescription = "TypeOne",
+        contactPerson = "Officer A",
+        deliusContactId = 1,
+        formSent = true,
+        createdByUser = "test.user",
+        createdDatetime = LocalDateTime.now(),
+        lastUpdatedUser = "test.user",
+        lastUpdatedDatetime = LocalDateTime.now(),
+      ),
+    )
+    contactRepository.save(
+      ContactEntity(
+        id = contactTwoId,
+        cosso = cosso,
+        contactTypeDescription = "TypeTwo",
+        contactPerson = "Officer B",
+        deliusContactId = 2,
+        formSent = true,
+        createdByUser = "test.user",
+        createdDatetime = LocalDateTime.now(),
+        lastUpdatedUser = "test.user",
+        lastUpdatedDatetime = LocalDateTime.now(),
+      ),
+    )
+
+    webTestClient.get()
+      .uri("/cosso/${cosso.id}")
+      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .exchange()
+      .expectStatus().isOk
+      .expectBody()
+      .jsonPath("$.cossoContactList.length()").isEqualTo(2)
+      .jsonPath("$.cossoContactList.[0].id").isEqualTo(contactOneId)
+      .jsonPath("$.cossoContactList.[0].deliusContactId").isEqualTo(1)
+      .jsonPath("$.cossoContactList.[1].id").isEqualTo(contactTwoId)
+      .jsonPath("$.cossoContactList.[1].deliusContactId").isEqualTo(2)
   }
 }

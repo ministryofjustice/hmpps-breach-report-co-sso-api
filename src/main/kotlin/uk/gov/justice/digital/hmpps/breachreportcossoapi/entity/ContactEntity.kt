@@ -33,6 +33,7 @@ data class ContactEntity(
   var contactDate: LocalDateTime? = null,
   var contactOutcome: String? = null,
   var formSent: Boolean? = null,
+  var deliusContactId: Long? = null,
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate

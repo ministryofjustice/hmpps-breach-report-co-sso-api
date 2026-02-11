@@ -83,4 +83,18 @@ class ContactController(
     ],
   )
   fun getContact(@PathVariable id: UUID) = contactService.getContact(id)
+
+  @GetMapping("/bycossoid/{cossoId}")
+  @Operation(
+    summary = "Retrieve a Breach Notice Contact",
+    description = "Calls through the breach notice service to retrieve a list of breach notice contacts using breach notice id",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Contacts returned"),
+      ApiResponse(responseCode = "401", description = "Unauthorized"),
+      ApiResponse(responseCode = "403", description = "Forbidden"),
+      ApiResponse(responseCode = "404", description = "CossoId not found"),
+    ],
+  )
+  fun getCossoContacts(@PathVariable cossoId: UUID): List<Contact> = contactService.fetchCossoContacts(cossoId)
 }
