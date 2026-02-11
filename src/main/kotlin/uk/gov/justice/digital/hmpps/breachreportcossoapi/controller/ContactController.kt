@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +21,7 @@ import java.util.UUID
 
 @Validated
 @RestController
-// @PreAuthorize("hasRole('ROLE_COSSO')")
+@PreAuthorize("hasRole('ROLE_COSSO')")
 @RequestMapping(value = ["/cosso/contact"], produces = ["application/json"])
 class ContactController(
   private val contactService: ContactService,
