@@ -55,7 +55,7 @@ class SnsService(
       description = "A co-sso breach report has been deleted",
       version = 1,
       occurredAt = ZonedDateTime.now(ZoneId.of("Europe/London")),
-      eventType = "probation-case.suicide-risk-form.deleted",
+      eventType = "probation-case.cosso.deleted",
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = crn))),
       detailUrl = null,
       additionalInformation = mapOf(
@@ -69,7 +69,7 @@ class SnsService(
         .messageAttributes(
           mapOf(
             "eventType" to MessageAttributeValue.builder().dataType("String")
-              .stringValue("probation-case.suicide-risk-form.deleted").build(),
+              .stringValue("probation-case.cosso.deleted").build(),
           ),
         ).build(),
     )
