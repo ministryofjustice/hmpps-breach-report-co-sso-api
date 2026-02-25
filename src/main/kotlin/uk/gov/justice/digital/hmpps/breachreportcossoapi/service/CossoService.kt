@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.AmendmentEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.CossoEntity
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.OffenceEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.RequirementEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.exception.NotFoundException
@@ -17,6 +18,7 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Contact
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Cosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.InitialiseCosso
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Offence
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Requirement
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
@@ -235,6 +237,7 @@ class CossoService(
     amendments = amendments.map { it.toModel() },
     cossoContactList = cossoContactList.map { it.toModel() },
     requirementList = cossoRequirementList.map { it.toModel() },
+    additionalOffenceList = cossoOffenceList.map { it.toModel() },
   )
 
   private fun Address.toEntity(existingEntity: AddressEntity? = null) = existingEntity?.copy(
@@ -338,6 +341,13 @@ class CossoService(
     contactLocationId = this.contactLocation?.id,
     formSent = this.formSent,
     deliusContactId = this.deliusContactId,
+  )
+
+  private fun OffenceEntity.toModel() = Offence(
+    id = this.id,
+    cossoId = this.cosso.id,
+    description = this.description,
+    code = this.code,
   )
 
   private fun RequirementEntity.toModel() = Requirement(

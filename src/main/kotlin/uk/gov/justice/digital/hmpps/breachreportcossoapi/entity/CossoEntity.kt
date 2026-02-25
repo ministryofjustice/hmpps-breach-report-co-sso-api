@@ -81,6 +81,8 @@ data class CossoEntity(
   val cossoContactList: MutableList<ContactEntity> = mutableListOf(),
   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "cosso")
   val cossoRequirementList: MutableList<RequirementEntity> = mutableListOf(),
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "cosso")
+  val cossoOffenceList: MutableList<OffenceEntity> = mutableListOf(),
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate

@@ -61,4 +61,6 @@ data class Cosso(
   var cossoContactList: List<Contact> = emptyList(),
   @field:JsonSetter(nulls = Nulls.AS_EMPTY)
   var requirementList: List<Requirement> = emptyList(),
+  @field:JsonSetter(nulls = Nulls.AS_EMPTY)
+  var additionalOffenceList: List<Offence> = emptyList(),
 )

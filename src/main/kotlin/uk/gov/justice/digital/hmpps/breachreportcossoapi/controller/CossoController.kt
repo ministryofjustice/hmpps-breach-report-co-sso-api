@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Cosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.InitialiseCosso
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.service.CossoService
+import uk.gov.justice.digital.hmpps.breachreportcossoapi.service.SnsService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.util.UUID
 
@@ -34,6 +35,7 @@ import java.util.UUID
 @RequestMapping(value = ["/cosso"], produces = ["application/json"])
 class CossoController(
   private val cossoService: CossoService,
+  private val sqsService: SnsService,
 ) {
   @GetMapping("/{uuid}")
   @Operation(
@@ -136,7 +138,8 @@ class CossoController(
     ],
   )
   fun deleteCosso(@PathVariable id: UUID) {
-    cossoService.deleteCosso(id)
+    val crn = cossoService.deleteCosso(id)
+    sqsService.sendDeleteDomainEvent(crn, id)
   }
 
   @GetMapping("/{uuid}/pdf")
@@ -153,6 +156,11 @@ class CossoController(
       ),
       ApiResponse(
         responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "500",
         description = "Forbidden to access this endpoint",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
