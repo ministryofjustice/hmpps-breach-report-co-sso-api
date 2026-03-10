@@ -1,8 +1,8 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.3.0"
-  kotlin("plugin.spring") version "2.3.0"
-  kotlin("plugin.jpa") version "2.3.0"
-  id("org.flywaydb.flyway") version "12.0.0"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.5.0"
+  kotlin("plugin.spring") version "2.3.10"
+  kotlin("plugin.jpa") version "2.3.10"
+  id("org.flywaydb.flyway") version "12.1.0"
 }
 
 configurations {
@@ -12,7 +12,7 @@ configurations {
 dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.8.2")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.15")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.16")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.flywaydb:flyway-core")
   implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -24,7 +24,7 @@ dependencies {
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.8.2")
   testImplementation("org.wiremock:wiremock-standalone:3.13.2")
   testImplementation("org.testcontainers:postgresql")
-  testImplementation("io.swagger.parser.v3:swagger-parser:2.1.37") {
+  testImplementation("io.swagger.parser.v3:swagger-parser:2.1.39") {
     exclude(group = "io.swagger.core.v3")
   }
 }
