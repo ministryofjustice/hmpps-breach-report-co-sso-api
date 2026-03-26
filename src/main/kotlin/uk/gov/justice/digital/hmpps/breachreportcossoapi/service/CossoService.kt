@@ -126,6 +126,13 @@ class CossoService(
     contactSaved = contactSaved,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
+    cossoRequirementList = requirementList.map {
+      it.toEntity(
+        existingEntity.cossoRequirementList.find { existingRequirementEntity ->
+          existingRequirementEntity.id == it.id
+        },
+      )
+    } as MutableList<RequirementEntity>,
     cossoContactList = cossoContactList.map {
       it.toEntity(
         existingEntity.cossoContactList.find { existingContactEntity ->
@@ -350,13 +357,51 @@ class CossoService(
     code = this.code,
   )
 
-  private fun RequirementEntity.toModel() = Requirement(
-    id = this.id,
-    cossoId = this.cosso.id,
-    deliusRequirementId = this.deliusRequirementId,
-    requirementTypeMainCategoryDescription = this.requirementTypeMainCategoryDescription,
-    requirementTypeSubCategoryDescription = this.requirementTypeSubCategoryDescription,
-    requirementLength = this.requirementLength,
-    requirementSecondLength = this.requirementSecondLength,
+  fun RequirementEntity.toModel(): Requirement = Requirement(
+    id = id,
+    cossoId = cosso?.id,
+    deliusRequirementId = deliusRequirementId,
+    requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
+    requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
+    requirementLength = requirementLength,
+    requirementSecondLength = requirementSecondLength,
+    notes = notes,
+    failure = failure,
+    failureReason = failureReason,
+    createdByUser = createdByUser,
+    createdDatetime = createdDatetime,
+    lastUpdatedUser = lastUpdatedUser,
+    lastUpdatedDatetime = lastUpdatedDatetime,
   )
+
+  fun Requirement.toEntity(existing: RequirementEntity? = null): RequirementEntity {
+    val cossoEntity = cossoId?.let {
+      cossoRepository.findById(it).orElseThrow {
+        IllegalArgumentException("Cosso $it not found")
+      }
+    }
+
+    return existing?.copy(
+      cosso = cossoEntity,
+      deliusRequirementId = deliusRequirementId ?: existing.deliusRequirementId,
+      requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
+      requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
+      requirementLength = requirementLength,
+      requirementSecondLength = requirementSecondLength,
+      notes = notes,
+      failure = failure,
+      failureReason = failureReason,
+    ) ?: RequirementEntity(
+      id = id ?: UUID.randomUUID(),
+      cosso = cossoEntity,
+      deliusRequirementId = deliusRequirementId ?: 0L,
+      requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
+      requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
+      requirementLength = requirementLength,
+      requirementSecondLength = requirementSecondLength,
+      notes = notes,
+      failure = failure,
+      failureReason = failureReason,
+    )
+  }
 }

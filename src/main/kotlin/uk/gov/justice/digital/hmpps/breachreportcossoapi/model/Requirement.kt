@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class Requirement(
   val id: UUID? = null,
-  val cossoId: UUID,
+  val cossoId: UUID?,
   val deliusRequirementId: Long? = null,
   val requirementTypeMainCategoryDescription: String? = null,
   val requirementTypeSubCategoryDescription: String? = null,
@@ -15,4 +15,7 @@ data class Requirement(
   val createdDatetime: LocalDateTime? = null,
   val lastUpdatedUser: String? = null,
   val lastUpdatedDatetime: LocalDateTime? = null,
+  val notes: String? = null,
+  val failure: Boolean? = null,
+  val failureReason: String? = null,
 )

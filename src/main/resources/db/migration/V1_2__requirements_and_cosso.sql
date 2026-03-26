@@ -9,7 +9,6 @@ CREATE TABLE public.cosso_requirement(id uuid not null primary key,
                                       created_datetime timestamp without time zone NULL,
                                       last_updated_user varchar(50) not null,
                                       last_updated_datetime timestamp without time zone NULL);
-);
 
 ALTER TABLE public.cosso_requirement ADD CONSTRAINT xfk1_cosso_requirement
     FOREIGN KEY (cosso_id) REFERENCES public.cosso (id) ON DELETE No Action ON UPDATE No Action;
