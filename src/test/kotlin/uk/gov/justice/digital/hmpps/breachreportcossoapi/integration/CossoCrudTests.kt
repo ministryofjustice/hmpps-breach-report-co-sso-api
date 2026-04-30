@@ -172,6 +172,7 @@ class CossoCrudTests : IntegrationTestBase() {
       confirmEqualities = true,
       riskOfHarmChanged = false,
       signAndSendSaved = true,
+      signedByRo = true,
       contactSaved = true,
       reviewRequiredDate = nowDateTime,
       reviewEvent = "EVENT_MOVE",
@@ -216,6 +217,7 @@ class CossoCrudTests : IntegrationTestBase() {
     assertThat(updated.confirmEqualities).isTrue()
     assertThat(updated.riskOfHarmChanged).isFalse()
     assertThat(updated.signAndSendSaved).isTrue()
+    assertThat(updated.signedByRo).isTrue()
     assertThat(updated.contactSaved).isTrue()
     assertThat(updated.reviewRequiredDate).isEqualTo(nowDateTime)
     assertThat(updated.reviewEvent).isEqualTo("EVENT_MOVE")

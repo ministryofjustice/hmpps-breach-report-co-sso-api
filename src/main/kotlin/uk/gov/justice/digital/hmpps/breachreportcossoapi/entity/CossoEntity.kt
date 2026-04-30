@@ -71,6 +71,7 @@ data class CossoEntity(
   var confirmEqualities: Boolean? = null,
   var riskOfHarmChanged: Boolean? = null,
   var signAndSendSaved: Boolean? = null,
+  var signedByRo: Boolean? = null,
   var signature: String? = null,
   var contactSaved: Boolean? = null,
   var reviewRequiredDate: LocalDateTime? = null,
