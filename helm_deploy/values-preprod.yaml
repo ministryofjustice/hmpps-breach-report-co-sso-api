@@ -10,8 +10,8 @@ generic-service:
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: "applicationinsights.dev.json"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
-    NDELIUS-INTEGRATION-API_URL: "https://breach-report-co-sso-and-delius-preprod.hmpps.service.justice.gov.uk"
-    FRONTEND_URL: "https://breach-report-co-sso-ui-preprod.hmpps.service.justice.gov.uk"
+    NDELIUS-INTEGRATION-API_URL: "https://cosso-and-delius-preprod.hmpps.service.justice.gov.uk"
+    FRONTEND_URL: "https://cosso-ui-preprod.hmpps.service.justice.gov.uk"
 
   allowlist:
     groups:
