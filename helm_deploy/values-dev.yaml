@@ -5,13 +5,13 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: breach-report-co-sso-api-dev.hmpps.service.justice.gov.uk
+    host: cosso-api-dev.hmpps.service.justice.gov.uk
 
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: "applicationinsights.dev.json"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
-    NDELIUS-INTEGRATION-API_URL: "https://breach-report-co-sso-and-delius-dev.hmpps.service.justice.gov.uk"
-    FRONTEND_URL: "https://breach-report-co-sso-ui-dev.hmpps.service.justice.gov.uk"
+    NDELIUS-INTEGRATION-API_URL: "https://cosso-and-delius-dev.hmpps.service.justice.gov.uk"
+    FRONTEND_URL: "https://cosso-ui-dev.hmpps.service.justice.gov.uk"
 
   allowlist:
     groups:
