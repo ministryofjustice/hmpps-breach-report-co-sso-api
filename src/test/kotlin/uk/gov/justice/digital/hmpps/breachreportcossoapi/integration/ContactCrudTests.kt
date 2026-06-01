@@ -69,7 +69,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.post()
       .uri("/cosso/contact")
-      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .bodyValue(payload)
       .exchange()
       .expectStatus().isCreated
@@ -110,7 +110,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/cosso/contact/${existing.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .bodyValue(updatePayload)
       .exchange()
       .expectStatus().isOk
@@ -151,7 +151,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/cosso/contact/${existing.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .bodyValue(updatePayload)
       .exchange()
       .expectStatus().isOk
@@ -184,7 +184,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri("/cosso/contact/${existing.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .exchange()
       .expectStatus().isOk
       .expectBody()
@@ -213,7 +213,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.delete()
       .uri("/cosso/contact/${contact.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .exchange()
       .expectStatus().isOk
 
@@ -268,7 +268,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri("/cosso/contact/bycossoid/${cossoA.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .exchange()
       .expectStatus().isOk
       .expectBody()
@@ -280,7 +280,7 @@ class ContactCrudTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri("/cosso/contact/bycossoid/${cossoB.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .exchange()
       .expectStatus().isOk
       .expectBody()
