@@ -16,7 +16,7 @@ import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
 @Validated
 @RestController
-@PreAuthorize("hasRole('ROLE_COSSO')")
+@PreAuthorize("hasRole('ROLE_BREACH__CO_SSO__RW')")
 @RequestMapping(value = ["/cosso/referencedata"], produces = ["application/json"])
 class ReferenceDataController(
   private val referenceDataService: ReferenceDataService,

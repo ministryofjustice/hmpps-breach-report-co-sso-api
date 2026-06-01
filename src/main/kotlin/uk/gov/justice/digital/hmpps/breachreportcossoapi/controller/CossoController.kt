@@ -31,7 +31,7 @@ import java.util.UUID
 
 @Validated
 @RestController
-@PreAuthorize("hasRole('ROLE_COSSO')")
+@PreAuthorize("hasRole('ROLE_BREACH__CO_SSO__RW')")
 @RequestMapping(value = ["/cosso"], produces = ["application/json"])
 class CossoController(
   private val cossoService: CossoService,

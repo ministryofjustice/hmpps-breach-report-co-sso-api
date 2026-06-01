@@ -30,7 +30,7 @@ class ReferenceDataCrudTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri("/cosso/referencedata/screeninformation/TestScreenA")
-      .headers(setAuthorisation(roles = listOf("ROLE_COSSO")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .exchange()
       .expectStatus().isOk
       .expectBody()

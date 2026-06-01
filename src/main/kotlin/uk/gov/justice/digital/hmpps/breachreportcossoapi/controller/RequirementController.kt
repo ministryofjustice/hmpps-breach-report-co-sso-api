@@ -21,7 +21,7 @@ import java.util.UUID
 
 @Validated
 @RestController
-@PreAuthorize("hasRole('ROLE_COSSO')")
+@PreAuthorize("hasRole('ROLE_BREACH__CO_SSO__RW')")
 @RequestMapping(value = ["/cosso/requirement"], produces = ["application/json"])
 class RequirementController(
   private val requirementService: RequirementService,
