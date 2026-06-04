@@ -1,0 +1,1 @@
+ALTER TABLE public.amendment DROP CONSTRAINT amendment_cosso_id_fkey;
