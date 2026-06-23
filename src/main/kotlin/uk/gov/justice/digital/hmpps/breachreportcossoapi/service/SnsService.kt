@@ -35,7 +35,7 @@ class SnsService(
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = cosso.crn))),
       detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/co-sso/" + id + "/pdf",
       additionalInformation = mapOf(
-        "cossoId" to id,
+        "id" to id,
         "username" to SecurityContextHolder.getContext().authentication.name,
       ),
 
@@ -59,7 +59,7 @@ class SnsService(
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = crn))),
       detailUrl = null,
       additionalInformation = mapOf(
-        "cossoId" to id,
+        "id" to id,
         "username" to SecurityContextHolder.getContext().authentication.name,
       ),
 
