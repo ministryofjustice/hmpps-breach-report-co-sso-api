@@ -7,6 +7,8 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Contact
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.util.UUID
 
 @Service
@@ -51,7 +53,7 @@ class ContactService(
     contactLocationId = contactLocation?.id,
     formSent = formSent,
     deliusContactId = deliusContactId,
-    contactDate = contactDate,
+    contactDate = contactDate?.atOffset(ZoneOffset.UTC),
     contactOutcome = contactOutcome,
   )
 
@@ -80,7 +82,7 @@ class ContactService(
       contactLocation = addressEntity,
       formSent = formSent,
       deliusContactId = deliusContactId,
-      contactDate = contactDate,
+      contactDate = contactDate?.toLocalDateTime(),
       contactOutcome = contactOutcome,
     )
   }

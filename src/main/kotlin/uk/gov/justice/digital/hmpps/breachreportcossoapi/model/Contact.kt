@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.model
 
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.UUID
 
 data class Contact(
@@ -12,5 +12,5 @@ data class Contact(
   var formSent: Boolean? = null,
   var deliusContactId: Long? = null,
   var contactOutcome: String? = null,
-  var contactDate: LocalDateTime? = null,
+  var contactDate: OffsetDateTime? = null,
 )
