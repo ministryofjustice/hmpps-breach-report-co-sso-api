@@ -205,11 +205,12 @@
       <td style="border:0.75pt solid #000; padding: 5pt; vertical-align:top; font-weight:bold;">Original offence</td>
       <td style="border:0.75pt solid #000; padding: 5pt; vertical-align:top;"><span
         th:text="${cosso.mainOffence}">{Main offence}</span>
-        <th:block th:each="additionalOffence : ${cosso.additionalOffenceList}">
-          <p style="margin: 5px 0 6px 0;">
-            <span th:text="${additionalOffence.description}">{Additional offences</span>
-          </p>
-        </th:block>
+      </td>
+    </tr>
+    <tr>
+      <td style="border:0.75pt solid #000; padding: 5pt; vertical-align:top; font-weight:bold;">Original Additional Offence(s)</td>
+      <td style="border:0.75pt solid #000; padding: 5pt; vertical-align:top; white-space: pre-line"><span
+        th:text="${cosso.additionalOffence}">{Additional offence}</span>
       </td>
     </tr>
     <tr>
@@ -219,7 +220,7 @@
     </tr>
     <tr>
       <td style="border:0.75pt solid #000; padding:5pt; vertical-align:top; font-weight:bold;">Date of sentence</td>
-      <td colspan="3" style="border:0.75pt solid #000; padding:0 5pt; vertical-align:top;">
+      <td colspan="3" style="border:0.75pt solid #000; padding:5pt; vertical-align:top;">
            <span th:if="${cosso.sentenceDate != null}"
                  th:text="${#temporals.format(cosso.sentenceDate, 'dd/MM/yyyy')}"></span>
         <span th:unless="${cosso.sentenceDate != null}">-</span></td>
