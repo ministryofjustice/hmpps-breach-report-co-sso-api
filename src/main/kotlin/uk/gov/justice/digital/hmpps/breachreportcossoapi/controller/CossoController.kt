@@ -175,4 +175,33 @@ class CossoController(
       ContentDisposition.attachment().filename("Breach_report_co_sso_" + cosso?.crn + ".pdf").build()
     return ResponseEntity.ok().headers(headers).body(pdfBytes)
   }
+
+  @PostMapping("/publish/{uuid}")
+  @Operation(
+    summary = "Publish a Cosso record",
+    description = "Calls through the cosso service to publish a cosso record to Alfresco",
+    security = [SecurityRequirement(name = "co-sso-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Cosso record published"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "The Cosso id was not found",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun publishCosso(@PathVariable uuid: UUID) {
+    val cosso = cossoService.findCossoById(uuid)
+    sqsService.sendPublishDomainEvent(cosso, uuid)
+  }
 }

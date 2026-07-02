@@ -31,9 +31,9 @@ class SnsService(
       description = "A co-sso breach report has been completed for a person on probation",
       version = 1,
       occurredAt = ZonedDateTime.now(ZoneId.of("Europe/London")),
-      eventType = "probation-case.breach-report-co-sso.created",
+      eventType = "probation-case.cosso-breach-notice.created",
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = cosso.crn))),
-      detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/co-sso/" + id + "/pdf",
+      detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/cosso/" + id + "/pdf",
       additionalInformation = mapOf(
         "id" to id,
         "username" to SecurityContextHolder.getContext().authentication.name,
@@ -48,6 +48,7 @@ class SnsService(
 
     publishResponse.get(5, TimeUnit.SECONDS).messageId() ?: throw MessagingException("Unable to publish creation message")
   }
+
   fun sendDeleteDomainEvent(crn: String, id: UUID) {
     val outboundTopic = hmppsQueueService.findByTopicId("hmppsbreachreportcossopublishtopic")
       ?: throw MissingQueueException("HmppsTopic hmppsbreachreportcossopublishtopic not found")
