@@ -94,15 +94,8 @@ hmpps.sqs:
     hmppsbreachreportcossoqueue:
       queueName: hmpps-breach-report-co-sso-queue
       dlqName: hmpps-breach-report-co-sso-queue-dlq
-      subscribeTopicId: hmppsbreachreportcossotopic
-    hmppsbreachreportcossopublishqueue:
-      queueName: hmpps-breach-report-co-sso-publish-queue
-      dlqName: hmpps-breach-report-co-sso-publish-queue-dlq
-      subscribeTopicId: hmppsbreachreportcossopublishtopic
     audit:
       queueName: audit-queue
   topics:
-    hmppsbreachreportcossotopic:
-      arn: arn:aws:sns:eu-west-2:000000000000:hmppsbreachreportcossotopic
     hmppsbreachreportcossopublishtopic:
       arn: arn:aws:sns:eu-west-2:000000000000:hmppsbreachreportcossopublishtopic
