@@ -25,13 +25,18 @@ class SnsService(
   val objectMapper: ObjectMapper,
   @Value("\${hmpps.sqs.topics.hmppsbreachreportcossopublishtopic.arn}") val outboundTopicArn: String,
 ) {
+  companion object {
+    const val EVENT_TYPE_CREATED = "probation-case.cosso-breach-notice.created"
+    const val EVENT_TYPE_DELETED = "probation-case.cosso-breach-notice.deleted"
+  }
+
   fun sendPublishDomainEvent(cosso: Cosso, id: UUID) {
     val outboundTopic = hmppsQueueService.findByTopicId("hmppsbreachreportcossopublishtopic") ?: throw MissingQueueException("HmppsTopic hmppsbreachreportcossopublishtopic not found")
     val messageObject = DomainEventsMessage(
       description = "A co-sso breach report has been completed for a person on probation",
       version = 1,
       occurredAt = ZonedDateTime.now(ZoneId.of("Europe/London")),
-      eventType = "probation-case.cosso-breach-notice.created",
+      eventType = EVENT_TYPE_CREATED,
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = cosso.crn))),
       detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/cosso/" + id + "/pdf",
       additionalInformation = mapOf(
@@ -42,7 +47,7 @@ class SnsService(
     )
     val publishResponse = outboundTopic.snsClient.publish(
       PublishRequest.builder().topicArn(outboundTopicArn).message(objectMapper.writeValueAsString(messageObject)).messageAttributes(
-        mapOf("eventType" to MessageAttributeValue.builder().dataType("String").stringValue("probation-case.breach-report-co-sso.created").build()),
+        mapOf("eventType" to MessageAttributeValue.builder().dataType("String").stringValue(EVENT_TYPE_CREATED).build()),
       ).build(),
     )
 
@@ -56,7 +61,7 @@ class SnsService(
       description = "A co-sso breach report has been deleted",
       version = 1,
       occurredAt = ZonedDateTime.now(ZoneId.of("Europe/London")),
-      eventType = "probation-case.cosso-breach-notice.deleted",
+      eventType = EVENT_TYPE_DELETED,
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = crn))),
       detailUrl = null,
       additionalInformation = mapOf(
@@ -70,7 +75,7 @@ class SnsService(
         .messageAttributes(
           mapOf(
             "eventType" to MessageAttributeValue.builder().dataType("String")
-              .stringValue("probation-case.cosso-breach-notice.deleted").build(),
+              .stringValue(EVENT_TYPE_DELETED).build(),
           ),
         ).build(),
     )
