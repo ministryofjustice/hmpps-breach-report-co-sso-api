@@ -67,4 +67,3 @@ class CossoServiceTest {
     assertThat(cosso.reviewEvent).isEqualTo("EVENT_MOVE")
   }
 }
-
