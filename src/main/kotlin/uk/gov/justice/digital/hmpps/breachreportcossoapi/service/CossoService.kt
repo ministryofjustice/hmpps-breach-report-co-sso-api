@@ -22,6 +22,7 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Offence
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.Requirement
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -333,7 +334,7 @@ class CossoService(
 
   fun updateReviewEvent(eventType: ReviewEventType, cosso: CossoEntity, occurredAt: ZonedDateTime) {
     cosso.reviewEvent = eventType.name
-    cosso.reviewRequiredDate = occurredAt.toLocalDateTime()
+    cosso.reviewRequiredDate = occurredAt.withZoneSameInstant(ZoneId.of("Europe/London")).toLocalDateTime()
     cossoRepository.save(cosso)
   }
 
