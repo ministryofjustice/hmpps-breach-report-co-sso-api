@@ -2,7 +2,7 @@ plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.7.1"
   kotlin("plugin.spring") version "2.4.10"
   kotlin("plugin.jpa") version "2.4.10"
-  id("org.flywaydb.flyway") version "13.0.0"
+  id("org.flywaydb.flyway") version "13.1.0"
 }
 
 configurations {
@@ -12,7 +12,7 @@ configurations {
 dependencies {
   implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.8.2")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.9.0")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.flywaydb:flyway-core")
   implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
