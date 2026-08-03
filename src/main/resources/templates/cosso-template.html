@@ -232,7 +232,7 @@
       </td>
       <td colspan="3" style="border:0.75pt solid #000; padding: 5pt; vertical-align:top;">
         <p style="margin: 0;"><span th:text="${cosso.sentenceType}">{Sentence Type}</span></p>
-        <p style="margin: 0;"><span th:text="${cosso.sentenceLength}">{Sentence Length}</span></p>
+        <p style="margin: 0;"><span th:text="${cosso.sentenceLength + ' ' + cosso.lengthUnits}">{Sentence Length}</span></p>
         <p style="margin: 0;" th:if="${cosso.suspendedCustodyLength}"><span th:text="'Suspended Custody Length '
           + ${cosso.suspendedCustodyLength}">{Suspended Custody Length}</span></p>
         <p style="margin: 0;"><span th:text="${cosso.secondLength}">{Second Length}</span></p>
