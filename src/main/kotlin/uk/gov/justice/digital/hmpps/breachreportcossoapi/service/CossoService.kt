@@ -246,7 +246,7 @@ class CossoService(
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
     amendments = amendments.map { it.toModel() },
-    cossoContactList = cossoContactList.map { it.toModel() },
+    cossoContactList = cossoContactList.sortedByDescending { it.contactDate }.map { it.toModel() },
     requirementList = cossoRequirementList.map { it.toModel() },
     additionalOffenceList = cossoOffenceList.map { it.toModel() },
   )
