@@ -18,7 +18,8 @@ generic-service:
       - digital_staff_and_mojo
       - unilink_staff
       - moj_cloud_platform
-      - delius-preprod
+      - delius-preprod # Remove when Delius stage/preprod have been migrated to MP
+      - mod-platform-live
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
