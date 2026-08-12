@@ -75,6 +75,21 @@ class DomainEventsListener(
       "probation-case.deleted.gdpr" -> {
         message.crn?.let { cossoService.deleteAllByCrn(it) }
       }
+
+      "probation-case.non-statutory-intervention.moved" -> {
+        // Update CRNs where appropriate
+        val cossoList = cossoService.getActiveCossoForCrn(message.sourceCrn)
+        cossoList.forEach {
+          nDeliusIntegrationService.getCrnForCossoUuid(it.id.toString())?.crn?.let { crn ->
+            cossoService.updateCossoCrn(
+              it,
+              crn,
+            )
+          }
+        }
+
+        updateReviewEvent(ReviewEventType.MOVE_NSI, cossoList, message.occurredAt)
+      }
     }
   }
 
