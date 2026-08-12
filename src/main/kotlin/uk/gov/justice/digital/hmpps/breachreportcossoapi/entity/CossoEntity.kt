@@ -76,6 +76,8 @@ data class CossoEntity(
   var contactSaved: Boolean? = null,
   var reviewRequiredDate: LocalDateTime? = null,
   var reviewEvent: String? = null,
+  var terminated: Boolean = false,
+  var terminatedUnterminatedDate: LocalDateTime? = null,
   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "cosso")
   val amendments: MutableList<AmendmentEntity> = mutableListOf(),
   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "cosso")

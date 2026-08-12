@@ -30,10 +30,13 @@ class CossoCrudTests : IntegrationTestBase() {
     val cosso = cossoRepository.findByCrn("X000001").single()
     assertThat(cosso.crn).isEqualTo("X000001")
     assertThat(cosso.id).isNotNull()
+    assertThat(cosso.terminated).isFalse()
   }
 
   @Test
   fun `should update a Cosso record`() {
+    val terminatedAt = LocalDateTime.now().withNano(0)
+
     webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .bodyValue(Cosso(crn = "X000002")).exchange().expectStatus().isCreated
 
@@ -45,6 +48,8 @@ class CossoCrudTests : IntegrationTestBase() {
       completedDate = ZonedDateTime.now(),
       reviewEvent = "Merge",
       reviewRequiredDate = LocalDateTime.now(),
+      terminated = true,
+      terminatedUnterminatedDate = terminatedAt,
     )
 
     webTestClient.put().uri("/cosso/" + cosso.id).headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
@@ -53,6 +58,8 @@ class CossoCrudTests : IntegrationTestBase() {
     val updatedCosso = cossoRepository.findByCrn("X000002").single()
     assertThat(updatedCosso.crn).isEqualTo("X000002")
     assertThat(updatedCosso.reviewEvent).isEqualTo("Merge")
+    assertThat(updatedCosso.terminated).isTrue()
+    assertThat(updatedCosso.terminatedUnterminatedDate).isEqualTo(terminatedAt)
   }
 
   @Test
@@ -176,6 +183,8 @@ class CossoCrudTests : IntegrationTestBase() {
       contactSaved = true,
       reviewRequiredDate = nowDateTime,
       reviewEvent = "EVENT_MOVE",
+      terminated = true,
+      terminatedUnterminatedDate = nowDateTime.plusDays(1),
     )
 
     webTestClient.put().uri("/cosso/${created.id}").headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
@@ -221,6 +230,8 @@ class CossoCrudTests : IntegrationTestBase() {
     assertThat(updated.contactSaved).isTrue()
     assertThat(updated.reviewRequiredDate).isEqualTo(nowDateTime)
     assertThat(updated.reviewEvent).isEqualTo("EVENT_MOVE")
+    assertThat(updated.terminated).isTrue()
+    assertThat(updated.terminatedUnterminatedDate).isEqualTo(nowDateTime.plusDays(1))
     assertThat(updated.createdDatetime).isEqualTo(created.createdDatetime)
     assertThat(updated.createdByUser).isEqualTo(created.createdByUser)
     assertThat(updated.lastUpdatedDatetime).isNotEqualTo(originalLastUpdated)
@@ -270,6 +281,8 @@ class CossoCrudTests : IntegrationTestBase() {
       .exchange()
       .expectStatus().isOk
       .expectBody()
+      .jsonPath("$.terminated").isEqualTo(false)
+      .jsonPath("$.terminatedUnterminatedDate").doesNotExist()
       .jsonPath("$.cossoContactList.length()").isEqualTo(2)
       .jsonPath("$.cossoContactList.[0].id").isEqualTo(contactOneId)
       .jsonPath("$.cossoContactList.[0].deliusContactId").isEqualTo(1)

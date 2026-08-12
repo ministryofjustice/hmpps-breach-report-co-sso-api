@@ -16,8 +16,19 @@ class NDeliusIntegrationService(
     .bodyToMono(NDeliusCrn::class.java)
     .onErrorResume(WebClientResponseException.NotFound::class.java) { Mono.empty() }
     .block()
+
+  fun getCossoEventDocuments(crn: String, eventNumber: String): List<String> = webClient.get()
+    .uri("/cosso-event-documents/{crn}/{eventNumber}", crn, eventNumber)
+    .retrieve()
+    .bodyToMono(CossoIdList::class.java)
+    .onErrorResume(WebClientResponseException.NotFound::class.java) { Mono.empty() }
+    .block()?.cossoIdList ?: emptyList()
 }
 
 data class NDeliusCrn(
   val crn: String,
+)
+
+data class CossoIdList(
+  val cossoIdList: List<String>,
 )
