@@ -128,6 +128,8 @@ class CossoService(
     contactSaved = contactSaved,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
+    terminated = terminated,
+    terminatedUnterminatedDate = terminatedUnterminatedDate,
     cossoRequirementList = requirementList.map {
       it.toEntity(
         existingEntity.cossoRequirementList.find { existingRequirementEntity ->
@@ -193,6 +195,8 @@ class CossoService(
     contactSaved = contactSaved,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
+    terminated = terminated,
+    terminatedUnterminatedDate = terminatedUnterminatedDate,
     cossoContactList = cossoContactList.map { it.toEntity() } as MutableList<ContactEntity>,
   )
 
@@ -245,6 +249,8 @@ class CossoService(
     contactSaved = contactSaved,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
+    terminated = terminated,
+    terminatedUnterminatedDate = terminatedUnterminatedDate,
     amendments = amendments.map { it.toModel() },
     cossoContactList = cossoContactList.sortedByDescending { it.contactDate }.map { it.toModel() },
     requirementList = cossoRequirementList.map { it.toModel() },
@@ -335,6 +341,13 @@ class CossoService(
   fun updateReviewEvent(eventType: ReviewEventType, cosso: CossoEntity, occurredAt: ZonedDateTime) {
     cosso.reviewEvent = eventType.name
     cosso.reviewRequiredDate = occurredAt.withZoneSameInstant(ZoneId.of("Europe/London")).toLocalDateTime()
+    cossoRepository.save(cosso)
+  }
+
+  fun updateTerminatedStatus(newStatus: Boolean, cossoId: String, occurredAt: ZonedDateTime) {
+    val cosso = cossoRepository.findById(UUID.fromString(cossoId)).orElseThrow { IllegalArgumentException("Cosso not found") }
+    cosso.terminated = newStatus
+    cosso.terminatedUnterminatedDate = occurredAt.toLocalDateTime()
     cossoRepository.save(cosso)
   }
 

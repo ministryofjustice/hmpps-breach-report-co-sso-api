@@ -14,6 +14,7 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.model.DomainEventsMessa
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.service.CossoService
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.service.NDeliusIntegrationService
 import java.time.ZonedDateTime
+import kotlin.text.get
 
 @Service
 class DomainEventsListener(
@@ -75,11 +76,46 @@ class DomainEventsListener(
       "probation-case.deleted.gdpr" -> {
         message.crn?.let { cossoService.deleteAllByCrn(it) }
       }
+
+      "probation-case.non-statutory-intervention.moved" -> {
+        // Update CRNs where appropriate
+        val cossoList = cossoService.getActiveCossoForCrn(message.sourceCrn)
+        cossoList.forEach {
+          nDeliusIntegrationService.getCrnForCossoUuid(it.id.toString())?.crn?.let { crn ->
+            cossoService.updateCossoCrn(
+              it,
+              crn,
+            )
+          }
+        }
+
+        updateReviewEvent(ReviewEventType.MOVE_NSI, cossoList, message.occurredAt)
+      }
+
+      "probation-case.sentence.terminated" -> {
+        val cossoIds = nDeliusIntegrationService.getCossoEventDocuments(message.crn!!, message.additionalInformation?.get("eventNumber") as String)
+        updateTerminationEvent(true, cossoIds, message.occurredAt)
+      }
+
+      "probation-case.sentence.unterminated" -> {
+        val cossoIds = nDeliusIntegrationService.getCossoEventDocuments(message.crn!!, message.additionalInformation?.get("eventNumber") as String)
+        updateTerminationEvent(false, cossoIds, message.occurredAt)
+      }
     }
   }
 
   private fun updateReviewEvent(eventType: ReviewEventType, cosso: Collection<CossoEntity>, occurredAt: ZonedDateTime) {
     cosso.forEach { cosso -> cossoService.updateReviewEvent(eventType, cosso, occurredAt) }
+  }
+
+  private fun updateTerminationEvent(terminated: Boolean, cossoIds: Collection<String>, occurredAt: ZonedDateTime) {
+    cossoIds.forEach { cossoId ->
+      cossoService.updateTerminatedStatus(
+        terminated,
+        cossoId,
+        occurredAt,
+      )
+    }
   }
 }
 
