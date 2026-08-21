@@ -11,6 +11,7 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.ContactRepos
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -35,7 +36,7 @@ class CossoCrudTests : IntegrationTestBase() {
 
   @Test
   fun `should update a Cosso record`() {
-    val terminatedAt = LocalDateTime.now().withNano(0)
+    val terminatedAt = ZonedDateTime.now(ZoneId.of("Europe/London")).withNano(0)
 
     webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
       .bodyValue(Cosso(crn = "X000002")).exchange().expectStatus().isCreated
@@ -184,7 +185,7 @@ class CossoCrudTests : IntegrationTestBase() {
       reviewRequiredDate = nowDateTime,
       reviewEvent = "EVENT_MOVE",
       terminated = true,
-      terminatedUnterminatedDate = nowDateTime.plusDays(1),
+      terminatedUnterminatedDate = nowZoned.plusDays(1),
     )
 
     webTestClient.put().uri("/cosso/${created.id}").headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
@@ -231,7 +232,7 @@ class CossoCrudTests : IntegrationTestBase() {
     assertThat(updated.reviewRequiredDate).isEqualTo(nowDateTime)
     assertThat(updated.reviewEvent).isEqualTo("EVENT_MOVE")
     assertThat(updated.terminated).isTrue()
-    assertThat(updated.terminatedUnterminatedDate).isEqualTo(nowDateTime.plusDays(1))
+    assertThat(updated.terminatedUnterminatedDate).isEqualTo(nowZoned.plusDays(1))
     assertThat(updated.createdDatetime).isEqualTo(created.createdDatetime)
     assertThat(updated.createdByUser).isEqualTo(created.createdByUser)
     assertThat(updated.lastUpdatedDatetime).isNotEqualTo(originalLastUpdated)

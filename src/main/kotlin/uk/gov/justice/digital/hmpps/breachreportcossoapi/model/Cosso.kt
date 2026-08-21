@@ -58,7 +58,7 @@ data class Cosso(
   var reviewRequiredDate: LocalDateTime? = null,
   var reviewEvent: String? = null,
   var terminated: Boolean = false,
-  var terminatedUnterminatedDate: LocalDateTime? = null,
+  var terminatedUnterminatedDate: ZonedDateTime? = null,
   var amendments: List<Amendment> = emptyList(),
   @field:JsonSetter(nulls = Nulls.AS_EMPTY)
   var cossoContactList: List<Contact> = emptyList(),
