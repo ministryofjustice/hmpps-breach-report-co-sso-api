@@ -340,7 +340,7 @@ class CossoService(
 
   fun updateReviewEvent(eventType: ReviewEventType, cosso: CossoEntity, occurredAt: ZonedDateTime) {
     cosso.reviewEvent = eventType.name
-    cosso.reviewRequiredDate = occurredAt.withZoneSameInstant(ZoneId.of("Europe/London")).toLocalDateTime()
+    cosso.reviewRequiredDate = occurredAt.withZoneSameInstant(ZoneId.of("Europe/London"))
     cossoRepository.save(cosso)
   }
 

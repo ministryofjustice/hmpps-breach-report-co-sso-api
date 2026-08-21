@@ -9,7 +9,7 @@ import uk.gov.justice.digital.hmpps.breachreportcossoapi.entity.CossoEntity
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachreportcossoapi.repository.CossoRepository
-import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
@@ -39,7 +39,9 @@ class CossoServiceTest {
 
     cossoService.updateReviewEvent(ReviewEventType.MERGE, cosso, occurredAtUtc)
 
-    assertThat(cosso.reviewRequiredDate).isEqualTo(LocalDateTime.of(2026, 7, 9, 14, 0, 0))
+    assertThat(cosso.reviewRequiredDate).isEqualTo(
+      ZonedDateTime.of(2026, 7, 9, 14, 0, 0, 0, ZoneId.of("Europe/London")),
+    )
     assertThat(cosso.reviewEvent).isEqualTo(ReviewEventType.MERGE.name)
     verify(cossoRepository).save(cosso)
   }
@@ -52,7 +54,9 @@ class CossoServiceTest {
 
     cossoService.updateReviewEvent(ReviewEventType.UNMERGE, cosso, occurredAtUtc)
 
-    assertThat(cosso.reviewRequiredDate).isEqualTo(LocalDateTime.of(2026, 1, 15, 13, 0, 0))
+    assertThat(cosso.reviewRequiredDate).isEqualTo(
+      ZonedDateTime.of(2026, 1, 15, 13, 0, 0, 0, ZoneId.of("Europe/London")),
+    )
     assertThat(cosso.reviewEvent).isEqualTo(ReviewEventType.UNMERGE.name)
     verify(cossoRepository).save(cosso)
   }
