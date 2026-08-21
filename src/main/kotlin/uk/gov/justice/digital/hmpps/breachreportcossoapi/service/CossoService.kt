@@ -347,7 +347,7 @@ class CossoService(
   fun updateTerminatedStatus(newStatus: Boolean, cossoId: String, occurredAt: ZonedDateTime) {
     val cosso = cossoRepository.findById(UUID.fromString(cossoId)).orElseThrow { IllegalArgumentException("Cosso not found") }
     cosso.terminated = newStatus
-    cosso.terminatedUnterminatedDate = occurredAt.toLocalDateTime()
+    cosso.terminatedUnterminatedDate = occurredAt.withZoneSameInstant(ZoneId.of("Europe/London"))
     cossoRepository.save(cosso)
   }
 
