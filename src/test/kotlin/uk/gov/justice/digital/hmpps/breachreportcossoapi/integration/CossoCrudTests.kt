@@ -48,7 +48,7 @@ class CossoCrudTests : IntegrationTestBase() {
       crn = "X000002",
       completedDate = ZonedDateTime.now(),
       reviewEvent = "Merge",
-      reviewRequiredDate = LocalDateTime.now(),
+      reviewRequiredDate = ZonedDateTime.now(),
       terminated = true,
       terminatedUnterminatedDate = terminatedAt,
     )
@@ -75,7 +75,7 @@ class CossoCrudTests : IntegrationTestBase() {
       crn = "X000003",
       completedDate = ZonedDateTime.now(),
       reviewEvent = "Merge",
-      reviewRequiredDate = LocalDateTime.now(),
+      reviewRequiredDate = ZonedDateTime.now(),
     )
 
     webTestClient.put().uri("/cosso/" + cosso.id).headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
@@ -114,6 +114,7 @@ class CossoCrudTests : IntegrationTestBase() {
     val nowDate = LocalDate.now()
     val nowDateTime = LocalDateTime.now().withNano(0)
     val nowZoned = ZonedDateTime.now().withNano(0)
+    val nowReviewRequired = nowZoned.plusHours(1)
     val dob = nowDateTime.minusYears(30)
 
     webTestClient.post().uri("/cosso").headers(setAuthorisation(roles = listOf("ROLE_BREACH__CO_SSO__RW")))
@@ -182,7 +183,7 @@ class CossoCrudTests : IntegrationTestBase() {
       signAndSendSaved = true,
       signedByRo = true,
       contactSaved = true,
-      reviewRequiredDate = nowDateTime,
+      reviewRequiredDate = nowReviewRequired,
       reviewEvent = "EVENT_MOVE",
       terminated = true,
       terminatedUnterminatedDate = nowZoned.plusDays(1),
@@ -229,7 +230,7 @@ class CossoCrudTests : IntegrationTestBase() {
     assertThat(updated.signAndSendSaved).isTrue()
     assertThat(updated.signedByRo).isTrue()
     assertThat(updated.contactSaved).isTrue()
-    assertThat(updated.reviewRequiredDate).isEqualTo(nowDateTime)
+    assertThat(updated.reviewRequiredDate).isEqualTo(nowReviewRequired)
     assertThat(updated.reviewEvent).isEqualTo("EVENT_MOVE")
     assertThat(updated.terminated).isTrue()
     assertThat(updated.terminatedUnterminatedDate).isEqualTo(nowZoned.plusDays(1))

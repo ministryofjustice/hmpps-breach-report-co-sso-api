@@ -74,7 +74,7 @@ data class CossoEntity(
   var signedByRo: Boolean? = null,
   var signature: String? = null,
   var contactSaved: Boolean? = null,
-  var reviewRequiredDate: LocalDateTime? = null,
+  var reviewRequiredDate: ZonedDateTime? = null,
   var reviewEvent: String? = null,
   var terminated: Boolean = false,
   var terminatedUnterminatedDate: ZonedDateTime? = null,
