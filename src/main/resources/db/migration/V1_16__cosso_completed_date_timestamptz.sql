@@ -1,0 +1,1 @@
+ALTER TABLE public.cosso ALTER column completed_date type timestamp with time zone USING completed_date AT TIME ZONE 'Europe/London';
