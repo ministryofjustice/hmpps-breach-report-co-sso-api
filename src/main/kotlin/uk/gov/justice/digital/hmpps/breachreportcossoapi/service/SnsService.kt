@@ -32,6 +32,7 @@ class SnsService(
 
   fun sendPublishDomainEvent(cosso: Cosso, id: UUID) {
     val outboundTopic = hmppsQueueService.findByTopicId("hmppsbreachreportcossopublishtopic") ?: throw MissingQueueException("HmppsTopic hmppsbreachreportcossopublishtopic not found")
+    val userName: String? = SecurityContextHolder.getContext().authentication?.name
     val messageObject = DomainEventsMessage(
       description = "A co-sso breach report has been completed for a person on probation",
       version = 1,
@@ -41,7 +42,7 @@ class SnsService(
       detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/cosso/" + id + "/pdf",
       additionalInformation = mapOf(
         "id" to id,
-        "username" to SecurityContextHolder.getContext().authentication.name,
+        "username" to userName!!,
       ),
 
     )
@@ -57,6 +58,7 @@ class SnsService(
   fun sendDeleteDomainEvent(crn: String, id: UUID) {
     val outboundTopic = hmppsQueueService.findByTopicId("hmppsbreachreportcossopublishtopic")
       ?: throw MissingQueueException("HmppsTopic hmppsbreachreportcossopublishtopic not found")
+    val userName: String? = SecurityContextHolder.getContext().authentication?.name
     val messageObject = DomainEventsMessage(
       description = "A co-sso breach report has been deleted",
       version = 1,
@@ -66,7 +68,7 @@ class SnsService(
       detailUrl = null,
       additionalInformation = mapOf(
         "id" to id,
-        "username" to SecurityContextHolder.getContext().authentication.name,
+        "username" to userName!!,
       ),
 
     )
