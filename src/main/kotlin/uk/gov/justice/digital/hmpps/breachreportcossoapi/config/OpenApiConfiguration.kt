@@ -1,6 +1,8 @@
 package uk.gov.justice.digital.hmpps.breachreportcossoapi.config
 
+import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.security.SecurityScheme
@@ -30,7 +32,13 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
       Info().title("HMPPS Breach Report Co Sso Api").version(version)
         .contact(Contact().name("HMPPS Digital Studio").email("feedback@digital.justice.gov.uk")),
     )
-  // TODO Add security schema and roles in `.components()` and `.addSecurityItem()`
+    .components(
+      Components().addSecuritySchemes(
+        "co-sso-api-ui-role",
+        SecurityScheme().addBearerJwtRequirement("ROLE_BREACH__CO_SSO__RW"),
+      ),
+    )
+    .addSecurityItem(SecurityRequirement().addList("co-sso-api-ui-role", listOf("read")))
 }
 
 private fun SecurityScheme.addBearerJwtRequirement(role: String): SecurityScheme = type(SecurityScheme.Type.HTTP)
