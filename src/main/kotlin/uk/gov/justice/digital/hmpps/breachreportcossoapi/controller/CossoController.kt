@@ -35,7 +35,7 @@ import java.util.UUID
 @RequestMapping(value = ["/cosso"], produces = ["application/json"])
 class CossoController(
   private val cossoService: CossoService,
-  private val sqsService: SnsService,
+  val sqsService: SnsService,
 ) {
   @GetMapping("/{uuid}")
   @Operation(
@@ -167,12 +167,12 @@ class CossoController(
     ],
   )
   fun getCossoAsPdf(@PathVariable uuid: UUID): ResponseEntity<ByteArray> {
-    var cosso = cossoService.findCossoById(uuid)
-    var pdfBytes = cossoService.getCossoAsPdf(uuid, cosso, cosso.completedDate == null)
-    var headers = HttpHeaders()
+    val cosso = cossoService.findCossoById(uuid)
+    val pdfBytes = cossoService.getCossoAsPdf(uuid, cosso, cosso.completedDate == null)
+    val headers = HttpHeaders()
     headers.contentType = MediaType.APPLICATION_PDF
     headers.contentDisposition =
-      ContentDisposition.attachment().filename("Breach_report_co_sso_" + cosso?.crn + ".pdf").build()
+      ContentDisposition.attachment().filename("Breach_report_co_sso_" + cosso.crn + ".pdf").build()
     return ResponseEntity.ok().headers(headers).body(pdfBytes)
   }
 
