@@ -19,7 +19,6 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webclient")
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.1")
   implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0")
   implementation("org.flywaydb:flyway-core")
   implementation("org.apache.pdfbox:pdfbox:2.0.37")
   implementation("org.springframework.boot:spring-boot-starter-flyway")
