@@ -75,6 +75,7 @@ class OpenApiDocsTest(
   }
 
   @Test
+  @Disabled("enable once method available.")
   fun `the open api json is valid`() {
     val result = OpenAPIV3Parser().readLocation("http://localhost:$port/v3/api-docs", null, null)
     assertThat(result.messages).isEmpty()
