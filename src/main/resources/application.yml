@@ -70,8 +70,6 @@ management:
 
 hmpps.sar.additionalAccessRole: COSSO
 
-springdoc.swagger-ui.version: 5.32.11
-
 ---
 spring.config.activate.on-profile: dev
 hmpps-auth.url: http://localhost:9090/auth
